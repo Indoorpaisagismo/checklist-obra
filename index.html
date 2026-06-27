@@ -420,7 +420,7 @@ async function salvarEst(input,ri){
         else                                   item.sit='PARCIAL';
       }
     }
-    cards(); showToast('✅ Estoque salvo','verde');
+    cards(); renderTabela(); showToast('✅ Estoque salvo','verde');
   }catch(e){input.classList.remove('saving');showToast('❌ '+e.message);}
 }
 
