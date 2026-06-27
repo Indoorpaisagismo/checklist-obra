@@ -20,7 +20,6 @@
 * { box-sizing: border-box; margin: 0; padding: 0; }
 body { font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif; background: var(--bege); color: #222; min-height: 100vh; }
 
-/* HEADER */
 header {
   background: var(--verde);
   color: white;
@@ -52,10 +51,8 @@ header p { font-size: 0.72rem; opacity: 0.65; margin-top: 1px; }
 }
 @keyframes pulse { 0%,100%{opacity:1} 50%{opacity:0.3} }
 
-/* CONTAINER */
 .container { max-width: 960px; margin: 0 auto; padding: 1rem; }
 
-/* LOADING */
 #loading {
   text-align: center;
   padding: 4rem 1rem;
@@ -71,7 +68,6 @@ header p { font-size: 0.72rem; opacity: 0.65; margin-top: 1px; }
 }
 @keyframes spin { to { transform: rotate(360deg); } }
 
-/* SELETOR DE OBRA */
 .card {
   background: var(--branco);
   border-radius: 14px;
@@ -104,7 +100,6 @@ select {
 }
 select:focus { outline: none; border-color: var(--verde); }
 
-/* CARDS RESUMO */
 .resumo {
   display: grid;
   grid-template-columns: repeat(4, 1fr);
@@ -130,7 +125,6 @@ select:focus { outline: none; border-color: var(--verde); }
 .stat.impl { border-color: var(--terracota); }
 .stat.impl .num { color: var(--terracota); }
 
-/* FILTROS */
 .filtros {
   display: flex;
   gap: 7px;
@@ -162,7 +156,6 @@ select:focus { outline: none; border-color: var(--verde); }
 }
 .busca:focus { outline: none; border-color: var(--verde); }
 
-/* BOTÃO EMAIL */
 .btn-email {
   background: var(--verde);
   color: white;
@@ -180,7 +173,6 @@ select:focus { outline: none; border-color: var(--verde); }
 }
 .btn-email:hover { background: var(--verde2); }
 
-/* TABELA */
 .tbl-wrap {
   background: var(--branco);
   border-radius: 14px;
@@ -207,10 +199,8 @@ tbody td { padding: 10px 14px; font-size: 0.86rem; vertical-align: middle; }
 .col-produto { font-weight: 500; }
 .col-num { text-align: center; font-weight: 700; font-size: 0.9rem; }
 .col-total { color: var(--verde); }
-.col-estoque { color: var(--verde-ok); }
 .col-pedir { color: var(--vermelho); }
 
-/* Input editar qtde estoque */
 .input-estoque {
   width: 60px;
   padding: 4px 6px;
@@ -226,7 +216,6 @@ tbody td { padding: 10px 14px; font-size: 0.86rem; vertical-align: middle; }
 .input-estoque.saving { border-color: var(--terracota); background: #fff8f0; }
 .input-estoque.saved { border-color: var(--verde-ok); background: #e8f5e9; }
 
-/* Badges */
 .badge {
   display: inline-block;
   padding: 3px 10px;
@@ -245,11 +234,9 @@ tbody td { padding: 10px 14px; font-size: 0.86rem; vertical-align: middle; }
 
 .col-forn { color: var(--cinza); font-size: 0.78rem; }
 
-/* VAZIO */
 .vazio { text-align: center; padding: 3rem 1rem; color: var(--cinza); }
 .vazio .icon { font-size: 2.2rem; margin-bottom: 10px; }
 
-/* MODAL EMAIL */
 .overlay {
   display: none;
   position: fixed;
@@ -291,7 +278,6 @@ tbody td { padding: 10px 14px; font-size: 0.86rem; vertical-align: middle; }
 .btn-send { padding: 9px 20px; background: var(--verde); color: white; border: none; border-radius: 9px; font-size: 0.85rem; cursor: pointer; font-weight: 700; }
 .btn-send:hover { background: var(--verde2); }
 
-/* TOAST */
 .toast {
   position: fixed;
   bottom: 1.5rem;
@@ -385,7 +371,6 @@ tbody td { padding: 10px 14px; font-size: 0.86rem; vertical-align: middle; }
   </div>
 </div>
 
-<!-- Modal Email -->
 <div class="overlay" id="overlay">
   <div class="modal">
     <h2>📧 Enviar Lista de Pedidos</h2>
@@ -410,99 +395,125 @@ const SHEET_ID = '1iT5-PI4EH0noG4-wsrI8h63lZutskZWSRxty2rmmVGQ';
 const API_KEY  = 'AIzaSyCe5c7z-CBesIw3hR9TOBl8EYUdEtkl0XY';
 const SHEET_NAME = 'PEDIDOS';
 
-// Mapeamento de colunas (1-based, conforme header da planilha)
-// Cliente=1, Produto=2, Qtde=3, PreçoMédio=4, Valor=5, Desconto=6,
-// MãoObra=7, TotalVenda=8, (vazia)=9, CustoUnitPrev=10, CustoUnitMeta=11,
-// CustoUnitReal=12, CustoTotalPrev=13, CustoTotalMeta=14, CustoTotalReal=15,
-// VendaUnitFinal=16, VendaFinal=17, LucroPrev=18, %=19, (vazia)=20,
-// LucroReal=21, %=22, Situacao=23, QtdeEstoque=24, QtdePedir=25
+// Colunas baseadas no print da planilha (linha 2 = header, agora linha 1 após exclusão):
+// A=Cliente, B=Produto, C=Qtde, D=Preço Médio, E=Valor, F=Desconto,
+// G=Mão de Obra, H=Total Venda, ...W=Situação, X=Qtde Estoque, Y=Qtde Pedir
 const COL = {
-  cliente: 0,    // A (índice 0)
-  produto: 1,    // B
-  qtde: 2,       // C
-  situacao: 22,  // W
-  qtdeEstoque: 23, // X
-  qtdePedir: 24  // Y
+  cliente:     0,   // A
+  produto:     1,   // B
+  qtde:        2,   // C
+  situacao:    22,  // W
+  qtdeEstoque: 23,  // X
+  fornecedor:  25   // Z (ajuste conforme sua planilha)
 };
 
 let todosOsDados = [];
 let obraAtual = [];
 let nomeObra = '';
 let filtro = 'TODOS';
-let rowIndexMap = {}; // produto -> índice real na planilha
 
 async function carregarPlanilha() {
   try {
-    const range = encodeURIComponent(`${SHEET_NAME}!A:Y`);
+    const range = encodeURIComponent(`${SHEET_NAME}!A:Z`);
     const url = `https://sheets.googleapis.com/v4/spreadsheets/${SHEET_ID}/values/${range}?key=${API_KEY}`;
     const res = await fetch(url);
     const data = await res.json();
+
     if (data.error) throw new Error(data.error.message);
 
-    todosOsDados = data.values || [];
-    processarDados();
-    document.getElementById('loading').style.display = 'none';
-    document.getElementById('appContent').style.display = 'block';
-  } catch (e) {
-    document.getElementById('loading').innerHTML = `<div style="color:#c62828">❌ Erro ao carregar: ${e.message}</div>`;
-  }
-}
+    const rows = data.values || [];
+    console.log('Total linhas:', rows.length);
+    if (rows.length > 0) console.log('Header:', rows[0]);
+    if (rows.length > 1) console.log('Linha 2:', rows[1]);
 
-function processarDados() {
-  // Agrupar por cliente (coluna A preenchida, coluna B vazia = nome do cliente)
-  const obras = {};
-  let clienteAtual = null;
+    // Encontrar índices das colunas pelo cabeçalho
+    const header = rows[0] || [];
+    const idxCliente  = header.findIndex(h => h && h.toString().toLowerCase().includes('cliente'));
+    const idxProduto  = header.findIndex(h => h && h.toString().toLowerCase().includes('produto'));
+    const idxQtde     = header.findIndex(h => h && h.toString().toLowerCase() === 'qtde');
+    const idxSituacao = header.findIndex(h => h && h.toString().toLowerCase().includes('situa'));
+    const idxEstoque  = header.findIndex(h => h && h.toString().toLowerCase().includes('estoque'));
+    const idxForn     = header.findIndex(h => h && h.toString().toLowerCase().includes('fornec'));
 
-  todosOsDados.forEach((row, idx) => {
-    if (idx === 0) return; // pular header
-    const colA = (row[COL.cliente] || '').trim();
-    const colB = (row[COL.produto] || '').trim();
+    console.log('Colunas encontradas:', {idxCliente, idxProduto, idxQtde, idxSituacao, idxEstoque, idxForn});
 
-    // Linha de cliente: colA tem nome longo, colB vazio
-    if (colA && !colB) {
-      clienteAtual = colA;
-      if (!obras[clienteAtual]) obras[clienteAtual] = [];
-    } else if (colB && clienteAtual) {
-      const situacao = (row[COL.situacao] || '').trim();
-      const qtdeTotal = parseFloat(row[COL.qtde]) || 0;
-      const qtdeEstoque = row[COL.qtdeEstoque] !== undefined && row[COL.qtdeEstoque] !== ''
-        ? parseFloat(row[COL.qtdeEstoque]) : null;
-      const qtdePedir = qtdeEstoque !== null
-        ? Math.max(0, qtdeTotal - qtdeEstoque)
-        : qtdeTotal;
+    // Se não encontrou pelo nome, usa índices fixos do print
+    const cCliente  = idxCliente  >= 0 ? idxCliente  : 0;
+    const cProduto  = idxProduto  >= 0 ? idxProduto  : 1;
+    const cQtde     = idxQtde     >= 0 ? idxQtde     : 2;
+    const cSituacao = idxSituacao >= 0 ? idxSituacao : 22;
+    const cEstoque  = idxEstoque  >= 0 ? idxEstoque  : 23;
+    const cForn     = idxForn     >= 0 ? idxForn     : -1;
+
+    todosOsDados = rows;
+
+    // Agrupar por cliente (coluna A)
+    const obras = {};
+    for (let i = 1; i < rows.length; i++) {
+      const row = rows[i];
+      const cliente = (row[cCliente] || '').toString().trim();
+      const produto  = (row[cProduto] || '').toString().trim();
+
+      if (!cliente || !produto) continue;
+
+      if (!obras[cliente]) obras[cliente] = [];
+
+      const qtdeTotal  = parseFloat(row[cQtde]) || 0;
+      const situacao   = (row[cSituacao] || '').toString().trim();
+      const qtdeEstRaw = row[cEstoque];
+      const qtdeEst    = (qtdeEstRaw !== undefined && qtdeEstRaw !== '') ? parseFloat(qtdeEstRaw) : null;
+      const qtdePedir  = qtdeEst !== null ? Math.max(0, qtdeTotal - qtdeEst) : qtdeTotal;
+      const forn       = cForn >= 0 ? (row[cForn] || '').toString().trim() : '';
 
       // Situação calculada
       let sitCalc = situacao;
-      if (qtdeEstoque !== null && situacao !== 'IMPLANTADO' && situacao !== 'CANCELADO') {
-        if (qtdeEstoque >= qtdeTotal) sitCalc = 'EM ESTOQUE';
-        else if (qtdeEstoque > 0) sitCalc = 'PARCIAL';
-        else sitCalc = 'PEDIR';
+      if (qtdeEst !== null && situacao !== 'IMPLANTADO' && situacao !== 'CANCELADO') {
+        if (qtdeEst >= qtdeTotal) sitCalc = 'EM ESTOQUE';
+        else if (qtdeEst > 0)     sitCalc = 'PARCIAL';
+        else                       sitCalc = 'PEDIR';
       }
 
-      obras[clienteAtual].push({
-        rowIdx: idx + 1, // linha real no sheets (1-based, +1 por header 0-based)
-        produto: colB,
+      obras[cliente].push({
+        rowIdx: i + 1, // linha real no Sheets (1-based, +1 por header)
+        produto,
         qtdeTotal,
-        qtdeEstoque,
+        qtdeEst,
         qtdePedir,
         situacao: sitCalc,
         situacaoOriginal: situacao,
-        fornecedor: (row[24] || '').trim() // coluna Z se existir, senão vazio
+        fornecedor: forn,
+        cEstoque,
       });
     }
-  });
 
-  // Popular select
-  const sel = document.getElementById('selObra');
-  sel.innerHTML = '<option value="">— escolha uma obra —</option>';
-  Object.keys(obras).filter(k => obras[k].length > 0).forEach(nome => {
-    const opt = document.createElement('option');
-    opt.value = nome;
-    opt.textContent = `${nome}  (${obras[nome].length} itens)`;
-    sel.appendChild(opt);
-  });
+    console.log('Obras encontradas:', Object.keys(obras));
 
-  window._obras = obras;
+    // Popular select
+    const sel = document.getElementById('selObra');
+    const obrasList = Object.keys(obras).filter(k => obras[k].length > 0);
+
+    if (obrasList.length === 0) {
+      document.getElementById('loading').innerHTML = '<div style="color:#c62828">❌ Nenhuma obra encontrada. Verifique a planilha.</div>';
+      return;
+    }
+
+    obrasList.forEach(nome => {
+      const opt = document.createElement('option');
+      opt.value = nome;
+      opt.textContent = `${nome}  (${obras[nome].length} itens)`;
+      sel.appendChild(opt);
+    });
+
+    window._obras = obras;
+    window._cEstoque = cEstoque;
+
+    document.getElementById('loading').style.display = 'none';
+    document.getElementById('appContent').style.display = 'block';
+
+  } catch (e) {
+    console.error(e);
+    document.getElementById('loading').innerHTML = `<div style="color:#c62828">❌ Erro ao carregar: ${e.message}</div>`;
+  }
 }
 
 function selecionarObra() {
@@ -559,8 +570,8 @@ function renderTabela() {
   vm.style.display = 'none';
 
   tb.innerHTML = items.map(item => {
-    const qtdeEstVal = item.qtdeEstoque !== null ? item.qtdeEstoque : '';
-    const qtdePedirVal = item.qtdePedir > 0 ? item.qtdePedir : (item.qtdeEstoque === null ? item.qtdeTotal : '—');
+    const qtdeEstVal = item.qtdeEst !== null ? item.qtdeEst : '';
+    const qtdePedirVal = item.qtdePedir > 0 ? item.qtdePedir : (item.qtdeEst === null ? item.qtdeTotal : '—');
     return `
     <tr>
       <td class="col-produto">${item.produto}</td>
@@ -573,7 +584,6 @@ function renderTabela() {
           value="${qtdeEstVal}"
           placeholder="—"
           data-row="${item.rowIdx}"
-          data-produto="${item.produto}"
           onchange="salvarEstoque(this, ${item.rowIdx})"
         >
       </td>
@@ -584,14 +594,13 @@ function renderTabela() {
   }).join('');
 }
 
-// Salvar qtde estoque no Google Sheets
 async function salvarEstoque(input, rowIdx) {
   const val = input.value.trim();
   input.classList.add('saving');
 
   try {
-    // Coluna X = índice 24 = coluna X no Sheets
-    const range = encodeURIComponent(`${SHEET_NAME}!X${rowIdx}`);
+    const cLetter = String.fromCharCode(65 + (window._cEstoque || 23)); // X por padrão
+    const range = encodeURIComponent(`${SHEET_NAME}!${cLetter}${rowIdx}`);
     const url = `https://sheets.googleapis.com/v4/spreadsheets/${SHEET_ID}/values/${range}?valueInputOption=RAW&key=${API_KEY}`;
     const res = await fetch(url, {
       method: 'PUT',
@@ -605,16 +614,15 @@ async function salvarEstoque(input, rowIdx) {
     input.classList.add('saved');
     setTimeout(() => input.classList.remove('saved'), 1500);
 
-    // Atualizar dados locais e recalcular
-    const produto = input.dataset.produto;
+    // Atualizar local
     const item = obraAtual.find(i => i.rowIdx === rowIdx);
     if (item) {
-      item.qtdeEstoque = val === '' ? null : Number(val);
-      item.qtdePedir = item.qtdeEstoque !== null ? Math.max(0, item.qtdeTotal - item.qtdeEstoque) : item.qtdeTotal;
+      item.qtdeEst = val === '' ? null : Number(val);
+      item.qtdePedir = item.qtdeEst !== null ? Math.max(0, item.qtdeTotal - item.qtdeEst) : item.qtdeTotal;
       if (item.situacao !== 'IMPLANTADO' && item.situacao !== 'CANCELADO') {
-        if (item.qtdeEstoque === null || item.qtdeEstoque === 0) item.situacao = 'PEDIR';
-        else if (item.qtdeEstoque >= item.qtdeTotal) item.situacao = 'EM ESTOQUE';
-        else item.situacao = 'PARCIAL';
+        if (item.qtdeEst === null || item.qtdeEst === 0) item.situacao = 'PEDIR';
+        else if (item.qtdeEst >= item.qtdeTotal)         item.situacao = 'EM ESTOQUE';
+        else                                              item.situacao = 'PARCIAL';
       }
     }
     atualizarCards();
@@ -625,16 +633,10 @@ async function salvarEstoque(input, rowIdx) {
   }
 }
 
-// Modal Email
 function abrirModalEmail() {
   if (!nomeObra) return;
-
-  // Agrupar itens a pedir por fornecedor
   const aPedir = obraAtual.filter(i => i.situacao === 'PEDIR' || i.situacao === 'PARCIAL');
-  if (!aPedir.length) {
-    showToast('Nenhum item a pedir nesta obra.');
-    return;
-  }
+  if (!aPedir.length) { showToast('Nenhum item a pedir nesta obra.'); return; }
 
   const grupos = {};
   aPedir.forEach(i => {
@@ -643,24 +645,19 @@ function abrirModalEmail() {
     grupos[forn].push(i);
   });
 
-  // Montar corpo do e-mail
   let corpo = `Pedido de Materiais\nObra: ${nomeObra}\n`;
   corpo += '─'.repeat(40) + '\n\n';
-
   Object.entries(grupos).forEach(([forn, itens]) => {
     corpo += `FORNECEDOR: ${forn.toUpperCase()}\n`;
     itens.forEach(i => {
       const qtd = i.situacao === 'PARCIAL'
-        ? `${i.qtdePedir} un (${i.qtdeEstoque} em estoque)`
+        ? `${i.qtdePedir} un (${i.qtdeEst} em estoque)`
         : `${i.qtdePedir} un`;
       corpo += `  • ${i.produto} — ${qtd}\n`;
     });
     corpo += '\n';
   });
-
-  corpo += '─'.repeat(40) + '\n';
-  corpo += 'INDOOR Paisagismo\n';
-  corpo += 'Londrina – PR';
+  corpo += '─'.repeat(40) + '\nINDOOR Paisagismo\nLondrina – PR';
 
   document.getElementById('emailSubject').value = `Pedido de Materiais – ${nomeObra}`;
   document.getElementById('emailBody').value = corpo;
@@ -668,20 +665,13 @@ function abrirModalEmail() {
   document.getElementById('overlay').classList.add('show');
 }
 
-function fecharModal() {
-  document.getElementById('overlay').classList.remove('show');
-}
+function fecharModal() { document.getElementById('overlay').classList.remove('show'); }
 
 function enviarEmail() {
   const to = document.getElementById('emailTo').value.trim();
   const subject = encodeURIComponent(document.getElementById('emailSubject').value);
   const body = encodeURIComponent(document.getElementById('emailBody').value);
-
-  if (!to) {
-    showToast('Informe o e-mail do destinatário.');
-    return;
-  }
-
+  if (!to) { showToast('Informe o e-mail do destinatário.'); return; }
   window.open(`mailto:${to}?subject=${subject}&body=${body}`);
   fecharModal();
   showToast('📧 Abrindo cliente de e-mail...', 'verde');
@@ -694,12 +684,10 @@ function showToast(msg, tipo = '') {
   setTimeout(() => t.classList.remove('show'), 3000);
 }
 
-// Fechar modal clicando fora
 document.getElementById('overlay').addEventListener('click', function(e) {
   if (e.target === this) fecharModal();
 });
 
-// Iniciar
 carregarPlanilha();
 </script>
 </body>
