@@ -399,11 +399,10 @@ async function salvarEst(input,ri){
   const val=input.value.trim();
   input.classList.add('saving');
   try{
-    const col=String.fromCharCode(65+cEst);
-    const url=`https://sheets.googleapis.com/v4/spreadsheets/${SHEET_ID}/values/${encodeURIComponent(TAB+'!'+col+ri)}?valueInputOption=RAW&key=${API_KEY}`;
-    const res=await fetch(url,{method:'PUT',headers:{'Content-Type':'application/json'},body:JSON.stringify({values:[[val===''?'':Number(val)]]})});
+    const col=cEst+1; // 1-based para o Apps Script
+    const res=await fetch('https://script.google.com/macros/s/AKfycbw4vrxk9nsI431QPMFPmUZVEWYiAI5m0InxEXdze5SgCe_Hq7sRukgcU4rZAQ0vXZAi/exec',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({row:ri,col:col,value:val===''?'':Number(val)})});
     const d=await res.json();
-    if(d.error) throw new Error(d.error.message);
+    if(!d.ok) throw new Error('Erro ao salvar');
     input.classList.remove('saving');
     input.classList.add('saved');
     setTimeout(()=>input.classList.remove('saved'),1500);
@@ -426,11 +425,10 @@ async function salvarSit(sel,ri){
   const sc='s-'+val.replace(/ /g,'-');
   sel.className='sel-sit saving';
   try{
-    const col=String.fromCharCode(65+cSit);
-    const url=`https://sheets.googleapis.com/v4/spreadsheets/${SHEET_ID}/values/${encodeURIComponent(TAB+'!'+col+ri)}?valueInputOption=RAW&key=${API_KEY}`;
-    const res=await fetch(url,{method:'PUT',headers:{'Content-Type':'application/json'},body:JSON.stringify({values:[[val]]})});
+    const col=cSit+1; // 1-based para o Apps Script
+    const res=await fetch('https://script.google.com/macros/s/AKfycbw4vrxk9nsI431QPMFPmUZVEWYiAI5m0InxEXdze5SgCe_Hq7sRukgcU4rZAQ0vXZAi/exec',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({row:ri,col:col,value:val})});
     const d=await res.json();
-    if(d.error) throw new Error(d.error.message);
+    if(!d.ok) throw new Error('Erro ao salvar');
     sel.className=`sel-sit ${sc}`;
     const item=obra.find(i=>i.ri===ri);
     if(item) item.sit=val;
