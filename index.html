@@ -243,7 +243,7 @@ let obra=[], nomeObra='', filtro='TODOS', cEst, cSit;
 
 async function carregarPlanilha(){
   try{
-    const url = `https://sheets.googleapis.com/v4/spreadsheets/${SHEET_ID}/values/${encodeURIComponent(TAB+'!A:Z')}?key=${API_KEY}`;
+    const url = 'https://script.google.com/macros/s/AKfycbzgWaKpsdZWbyMZsvA_doFpyQJeyV44Wg_L7N13jRyB1ZEZwbTVDMglQXp-eo0GEd6N/exec';
     const d   = await (await fetch(url)).json();
     if(d.error) throw new Error(d.error.message);
     const rows=d.values||[], hdr=rows[0]||[];
@@ -399,8 +399,7 @@ async function salvarEst(input,ri){
   const val=input.value.trim();
   input.classList.add('saving');
   try{
-    const col=cEst+1; // 1-based para o Apps Script
-    const res=await fetch('https://script.google.com/macros/s/AKfycbw4vrxk9nsI431QPMFPmUZVEWYiAI5m0InxEXdze5SgCe_Hq7sRukgcU4rZAQ0vXZAi/exec',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({row:ri,col:col,value:val===''?'':Number(val)})});
+    const res=await fetch('https://script.google.com/macros/s/AKfycbzgWaKpsdZWbyMZsvA_doFpyQJeyV44Wg_L7N13jRyB1ZEZwbTVDMglQXp-eo0GEd6N/exec',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({row:ri,col:cEst+1,value:val===''?'':Number(val)})});
     const d=await res.json();
     if(!d.ok) throw new Error('Erro ao salvar');
     input.classList.remove('saving');
@@ -425,8 +424,7 @@ async function salvarSit(sel,ri){
   const sc='s-'+val.replace(/ /g,'-');
   sel.className='sel-sit saving';
   try{
-    const col=cSit+1; // 1-based para o Apps Script
-    const res=await fetch('https://script.google.com/macros/s/AKfycbw4vrxk9nsI431QPMFPmUZVEWYiAI5m0InxEXdze5SgCe_Hq7sRukgcU4rZAQ0vXZAi/exec',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({row:ri,col:col,value:val})});
+    const res=await fetch('https://script.google.com/macros/s/AKfycbzgWaKpsdZWbyMZsvA_doFpyQJeyV44Wg_L7N13jRyB1ZEZwbTVDMglQXp-eo0GEd6N/exec',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({row:ri,col:cSit+1,value:val})});
     const d=await res.json();
     if(!d.ok) throw new Error('Erro ao salvar');
     sel.className=`sel-sit ${sc}`;
