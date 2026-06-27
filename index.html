@@ -6,329 +6,148 @@
 <title>INDOOR · Checklist Início de Obra</title>
 <style>
 :root {
-  --verde: #2C3E2D;
-  --verde2: #3d5c3e;
-  --bege: #F5F0E8;
-  --terracota: #A67C52;
-  --cinza: #8a8a8a;
-  --borda: #e0dbd4;
-  --branco: #ffffff;
-  --vermelho: #c62828;
-  --azul: #1565C0;
-  --verde-ok: #2e7d32;
+  --verde:#2C3E2D; --verde2:#3d5c3e; --bege:#F5F0E8;
+  --terra:#A67C52; --cinza:#8a8a8a; --borda:#e0dbd4;
+  --branco:#ffffff; --verm:#c62828; --azul:#1565C0; --vok:#2e7d32;
 }
-* { box-sizing: border-box; margin: 0; padding: 0; }
-body { font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif; background: var(--bege); color: #222; min-height: 100vh; }
+*{box-sizing:border-box;margin:0;padding:0;}
+body{font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif;background:var(--bege);color:#222;min-height:100vh;}
 
-header {
-  background: var(--verde);
-  color: white;
-  padding: 0.85rem 1.25rem;
-  display: flex;
-  align-items: center;
-  gap: 12px;
-  position: sticky;
-  top: 0;
-  z-index: 200;
-  box-shadow: 0 2px 10px rgba(0,0,0,0.25);
-}
-.logo { font-size: 1.4rem; }
-header h1 { font-size: 1rem; font-weight: 700; }
-header p { font-size: 0.72rem; opacity: 0.65; margin-top: 1px; }
-.sync-badge {
-  margin-left: auto;
-  font-size: 0.7rem;
-  opacity: 0.8;
-  display: flex;
-  align-items: center;
-  gap: 5px;
-}
-.sync-dot {
-  width: 7px; height: 7px;
-  border-radius: 50%;
-  background: #69f0ae;
-  animation: pulse 2s infinite;
-}
-@keyframes pulse { 0%,100%{opacity:1} 50%{opacity:0.3} }
+/* HEADER */
+header{background:var(--verde);color:white;padding:.85rem 1rem;display:flex;align-items:center;gap:10px;position:sticky;top:0;z-index:200;box-shadow:0 2px 10px rgba(0,0,0,.25);}
+.logo{font-size:1.3rem;}
+header h1{font-size:.95rem;font-weight:700;}
+header p{font-size:.68rem;opacity:.65;margin-top:1px;}
+.sync{margin-left:auto;font-size:.68rem;opacity:.8;display:flex;align-items:center;gap:5px;white-space:nowrap;}
+.dot{width:7px;height:7px;border-radius:50%;background:#69f0ae;animation:pulse 2s infinite;}
+@keyframes pulse{0%,100%{opacity:1}50%{opacity:.3}}
 
-.container { max-width: 960px; margin: 0 auto; padding: 1rem; }
+.wrap{max-width:900px;margin:0 auto;padding:.75rem;}
 
-#loading { text-align: center; padding: 4rem 1rem; color: var(--cinza); }
-.spinner {
-  width: 36px; height: 36px;
-  border: 3px solid #ddd;
-  border-top-color: var(--verde);
-  border-radius: 50%;
-  animation: spin 0.8s linear infinite;
-  margin: 0 auto 1rem;
-}
-@keyframes spin { to { transform: rotate(360deg); } }
+/* LOADING */
+#loading{text-align:center;padding:4rem 1rem;color:var(--cinza);}
+.spin{width:34px;height:34px;border:3px solid #ddd;border-top-color:var(--verde);border-radius:50%;animation:spin .8s linear infinite;margin:0 auto .75rem;}
+@keyframes spin{to{transform:rotate(360deg)}}
 
-.card {
-  background: var(--branco);
-  border-radius: 14px;
-  padding: 1.25rem;
-  margin-bottom: 1rem;
-  box-shadow: 0 1px 5px rgba(0,0,0,0.07);
-}
-.card label {
-  font-size: 0.72rem;
-  color: var(--cinza);
-  font-weight: 600;
-  display: block;
-  margin-bottom: 7px;
-  text-transform: uppercase;
-  letter-spacing: 0.06em;
-}
-.sel-obra {
-  width: 100%;
-  padding: 11px 14px;
-  border: 1.5px solid var(--borda);
-  border-radius: 10px;
-  font-size: 0.95rem;
-  background: white;
-  color: #222;
-  appearance: none;
-  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='8'%3E%3Cpath d='M1 1l5 5 5-5' stroke='%23888' stroke-width='1.5' fill='none' stroke-linecap='round'/%3E%3C/svg%3E");
-  background-repeat: no-repeat;
-  background-position: right 14px center;
-  cursor: pointer;
-}
-.sel-obra:focus { outline: none; border-color: var(--verde); }
+/* CARD */
+.card{background:var(--branco);border-radius:14px;padding:1rem;margin-bottom:.75rem;box-shadow:0 1px 4px rgba(0,0,0,.07);}
+.card-lbl{font-size:.68rem;color:var(--cinza);font-weight:600;display:block;margin-bottom:6px;text-transform:uppercase;letter-spacing:.06em;}
+.sel-obra{width:100%;padding:10px 12px;border:1.5px solid var(--borda);border-radius:10px;font-size:.92rem;background:white;color:#222;appearance:none;background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='8'%3E%3Cpath d='M1 1l5 5 5-5' stroke='%23888' stroke-width='1.5' fill='none' stroke-linecap='round'/%3E%3C/svg%3E");background-repeat:no-repeat;background-position:right 12px center;cursor:pointer;}
+.sel-obra:focus{outline:none;border-color:var(--verde);}
 
-.resumo {
-  display: grid;
-  grid-template-columns: repeat(4, 1fr);
-  gap: 10px;
-  margin-bottom: 1rem;
-}
-.stat {
-  background: var(--branco);
-  border-radius: 12px;
-  padding: 14px 12px;
-  box-shadow: 0 1px 5px rgba(0,0,0,0.07);
-  text-align: center;
-  border-top: 3px solid transparent;
-  cursor: pointer;
-  transition: opacity 0.15s;
-}
-.stat:hover { opacity: 0.8; }
-.stat.ativo { box-shadow: 0 0 0 2px var(--verde); }
-.stat .num { font-size: 1.6rem; font-weight: 800; line-height: 1; }
-.stat .lbl { font-size: 0.65rem; color: var(--cinza); margin-top: 4px; text-transform: uppercase; letter-spacing: 0.05em; }
-.stat.total { border-color: var(--verde); }
-.stat.total .num { color: var(--verde); }
-.stat.pedir { border-color: var(--vermelho); }
-.stat.pedir .num { color: var(--vermelho); }
-.stat.estoque { border-color: var(--verde-ok); }
-.stat.estoque .num { color: var(--verde-ok); }
-.stat.impl { border-color: var(--terracota); }
-.stat.impl .num { color: var(--terracota); }
+/* CARDS RESUMO */
+.resumo{display:grid;grid-template-columns:repeat(4,1fr);gap:8px;margin-bottom:.75rem;}
+@media(max-width:480px){.resumo{grid-template-columns:repeat(2,1fr);}}
+.stat{background:var(--branco);border-radius:12px;padding:12px 8px;box-shadow:0 1px 4px rgba(0,0,0,.07);text-align:center;border-top:3px solid transparent;cursor:pointer;}
+.stat .num{font-size:1.5rem;font-weight:800;line-height:1;}
+.stat .lbl{font-size:.6rem;color:var(--cinza);margin-top:3px;text-transform:uppercase;letter-spacing:.05em;}
+.stat.ativo{box-shadow:0 0 0 2px var(--verde);}
+.stat.s-total{border-color:var(--verde)}.stat.s-total .num{color:var(--verde);}
+.stat.s-pedir{border-color:var(--verm)}.stat.s-pedir .num{color:var(--verm);}
+.stat.s-est{border-color:var(--vok)}.stat.s-est .num{color:var(--vok);}
+.stat.s-impl{border-color:var(--terra)}.stat.s-impl .num{color:var(--terra);}
 
-.barra-filtros {
-  display: flex;
-  gap: 8px;
-  margin-bottom: 1rem;
-  flex-wrap: wrap;
-  align-items: center;
+/* FILTROS */
+.filtros{display:flex;gap:6px;margin-bottom:.75rem;flex-wrap:wrap;align-items:center;}
+.fbtn{padding:6px 12px;border-radius:20px;border:1.5px solid var(--borda);background:white;font-size:.75rem;cursor:pointer;font-weight:600;color:#555;}
+.fbtn.on{background:var(--verde);color:white;border-color:var(--verde);}
+
+.sel-forn{padding:6px 26px 6px 10px;border-radius:20px;border:1.5px solid var(--borda);background:white;font-size:.75rem;font-weight:600;color:#555;appearance:none;background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='10' height='6'%3E%3Cpath d='M1 1l4 4 4-4' stroke='%23888' stroke-width='1.5' fill='none' stroke-linecap='round'/%3E%3C/svg%3E");background-repeat:no-repeat;background-position:right 8px center;cursor:pointer;max-width:160px;}
+.sel-forn.ativo{border-color:var(--verde);color:var(--verde);}
+.sel-forn:focus{outline:none;}
+
+.busca{padding:6px 12px;border:1.5px solid var(--borda);border-radius:20px;font-size:.78rem;background:white;flex:1;min-width:100px;}
+.busca:focus{outline:none;border-color:var(--verde);}
+
+.btn-email{background:var(--verde);color:white;border:none;padding:8px 14px;border-radius:20px;font-size:.75rem;font-weight:600;cursor:pointer;display:flex;align-items:center;gap:5px;white-space:nowrap;}
+.btn-email:hover{background:var(--verde2);}
+
+/* TABELA DESKTOP */
+.tbl-wrap{background:var(--branco);border-radius:14px;box-shadow:0 1px 4px rgba(0,0,0,.07);overflow:hidden;}
+
+/* TABELA — modo desktop */
+@media(min-width:641px){
+  table{width:100%;border-collapse:collapse;}
+  thead th{background:var(--verde);color:white;text-align:left;padding:9px 12px;font-size:.68rem;font-weight:700;text-transform:uppercase;letter-spacing:.05em;white-space:nowrap;}
+  tbody tr{border-bottom:1px solid #f0ece6;}
+  tbody tr:last-child{border-bottom:none;}
+  tbody tr:hover{background:#faf8f5;}
+  tbody td{padding:9px 12px;font-size:.84rem;vertical-align:middle;}
+  .col-prod{font-weight:500;}
+  .col-num{text-align:center;font-weight:700;}
+  .col-tot{color:var(--verde);}
+  .col-ped{color:var(--verm);}
+  .inp-est{width:58px;padding:4px 5px;border:1.5px solid var(--borda);border-radius:7px;font-size:.84rem;font-weight:700;text-align:center;color:var(--vok);background:#f0faf0;}
+  .inp-est:focus{outline:none;border-color:var(--vok);}
+  .inp-est.saved{border-color:var(--vok);background:#e8f5e9;}
+  .col-forn{color:var(--cinza);font-size:.76rem;}
 }
 
-/* filtro situação */
-.fbtn {
-  padding: 7px 15px;
-  border-radius: 20px;
-  border: 1.5px solid var(--borda);
-  background: white;
-  font-size: 0.78rem;
-  cursor: pointer;
-  font-weight: 600;
-  color: #555;
-  transition: all 0.15s;
-}
-.fbtn:hover { border-color: var(--verde); color: var(--verde); }
-.fbtn.on { background: var(--verde); color: white; border-color: var(--verde); }
+/* TABELA — modo mobile: cards por item */
+@media(max-width:640px){
+  table,thead,tbody,tr,td,th{display:block;}
+  thead{display:none;}
+  tbody tr{
+    border-bottom:1px solid var(--borda);
+    padding:.75rem 1rem;
+    position:relative;
+  }
+  tbody tr:last-child{border-bottom:none;}
 
-/* filtro fornecedor */
-.sel-forn {
-  padding: 7px 30px 7px 12px;
-  border-radius: 20px;
-  border: 1.5px solid var(--borda);
-  background: white;
-  font-size: 0.78rem;
-  font-weight: 600;
-  color: #555;
-  appearance: none;
-  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='10' height='6'%3E%3Cpath d='M1 1l4 4 4-4' stroke='%23888' stroke-width='1.5' fill='none' stroke-linecap='round'/%3E%3C/svg%3E");
-  background-repeat: no-repeat;
-  background-position: right 10px center;
-  cursor: pointer;
-}
-.sel-forn:focus { outline: none; border-color: var(--verde); }
-.sel-forn.ativo { border-color: var(--verde); color: var(--verde); background-color: #f0f8f0; }
+  /* linha 1: produto */
+  td.col-prod{font-weight:600;font-size:.9rem;margin-bottom:6px;}
 
-.busca {
-  padding: 7px 14px;
-  border: 1.5px solid var(--borda);
-  border-radius: 20px;
-  font-size: 0.82rem;
-  background: white;
-  min-width: 170px;
-}
-.busca:focus { outline: none; border-color: var(--verde); }
+  /* linha 2: qtde / estoque / pedir em linha */
+  .mob-nums{display:flex;gap:10px;align-items:center;margin-bottom:8px;flex-wrap:wrap;}
+  .mob-lbl{font-size:.62rem;color:var(--cinza);text-transform:uppercase;letter-spacing:.04em;display:block;margin-bottom:2px;}
+  .mob-val{font-weight:700;font-size:.92rem;}
+  .mob-val.tot{color:var(--verde);}
+  .mob-val.ped{color:var(--verm);}
 
-.btn-email {
-  background: var(--verde);
-  color: white;
-  border: none;
-  padding: 9px 18px;
-  border-radius: 20px;
-  font-size: 0.78rem;
-  font-weight: 600;
-  cursor: pointer;
-  display: flex;
-  align-items: center;
-  gap: 6px;
-  transition: background 0.15s;
-  white-space: nowrap;
-  margin-left: auto;
-}
-.btn-email:hover { background: var(--verde2); }
+  .inp-est{width:58px;padding:4px 5px;border:1.5px solid var(--borda);border-radius:7px;font-size:.86rem;font-weight:700;text-align:center;color:var(--vok);background:#f0faf0;}
+  .inp-est:focus{outline:none;border-color:var(--vok);}
+  .inp-est.saved{background:#e8f5e9;}
 
-.tbl-wrap {
-  background: var(--branco);
-  border-radius: 14px;
-  box-shadow: 0 1px 5px rgba(0,0,0,0.07);
-  overflow: hidden;
-}
-table { width: 100%; border-collapse: collapse; }
-thead th {
-  background: var(--verde);
-  color: white;
-  text-align: left;
-  padding: 10px 14px;
-  font-size: 0.7rem;
-  font-weight: 700;
-  text-transform: uppercase;
-  letter-spacing: 0.06em;
-  white-space: nowrap;
-}
-tbody tr { border-bottom: 1px solid #f0ece6; transition: background 0.1s; }
-tbody tr:last-child { border-bottom: none; }
-tbody tr:hover { background: #faf8f5; }
-tbody td { padding: 8px 14px; font-size: 0.86rem; vertical-align: middle; }
+  /* linha 3: situação + fornecedor */
+  .mob-row3{display:flex;align-items:center;gap:8px;flex-wrap:wrap;}
+  .col-forn{font-size:.75rem;color:var(--cinza);}
 
-.col-produto { font-weight: 500; }
-.col-num { text-align: center; font-weight: 700; font-size: 0.9rem; }
-.col-total { color: var(--verde); }
-.col-pedir { color: var(--vermelho); }
-
-.input-estoque {
-  width: 60px;
-  padding: 4px 6px;
-  border: 1.5px solid var(--borda);
-  border-radius: 7px;
-  font-size: 0.86rem;
-  font-weight: 700;
-  text-align: center;
-  color: var(--verde-ok);
-  background: #f0faf0;
+  /* esconder colunas antigas no mobile */
+  td.col-num,td.col-forn-desk{display:none;}
 }
-.input-estoque:focus { outline: none; border-color: var(--verde-ok); }
-.input-estoque.saving { border-color: var(--terracota); }
-.input-estoque.saved { border-color: var(--verde-ok); background: #e8f5e9; }
 
-/* Select de situação inline */
-.sel-sit {
-  padding: 4px 24px 4px 8px;
-  border-radius: 12px;
-  border: 1.5px solid transparent;
-  font-size: 0.72rem;
-  font-weight: 700;
-  cursor: pointer;
-  appearance: none;
-  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='8' height='5'%3E%3Cpath d='M1 1l3 3 3-3' stroke='%23666' stroke-width='1.2' fill='none' stroke-linecap='round'/%3E%3C/svg%3E");
-  background-repeat: no-repeat;
-  background-position: right 6px center;
-}
-.sel-sit:focus { outline: none; }
-.sel-sit.s-PEDIR        { background-color:#fdecea; color:#c62828; border-color:#f5c6c6; }
-.sel-sit.s-EM-ESTOQUE   { background-color:#e8f5e9; color:#2e7d32; border-color:#c8e6c9; }
-.sel-sit.s-IMPLANTADO   { background-color:#fff3e0; color:#bf6000; border-color:#ffe0b2; }
-.sel-sit.s-CANCELADO    { background-color:#f5f5f5; color:#757575; border-color:#e0e0e0; }
-.sel-sit.s-PARCIAL      { background-color:#e3f2fd; color:#1565c0; border-color:#bbdefb; }
-.sel-sit.s-AGUARDAR     { background-color:#f3e5f5; color:#6a1b9a; border-color:#e1bee7; }
-.sel-sit.saving         { opacity: 0.6; }
+/* SELECT SITUAÇÃO */
+.sel-sit{padding:4px 22px 4px 8px;border-radius:12px;border:1.5px solid transparent;font-size:.7rem;font-weight:700;cursor:pointer;appearance:none;background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='8' height='5'%3E%3Cpath d='M1 1l3 3 3-3' stroke='%23666' stroke-width='1.2' fill='none' stroke-linecap='round'/%3E%3C/svg%3E");background-repeat:no-repeat;background-position:right 5px center;}
+.sel-sit:focus{outline:none;}
+.sel-sit.s-PEDIR{background-color:#fdecea;color:#c62828;border-color:#f5c6c6;}
+.sel-sit.s-EM-ESTOQUE{background-color:#e8f5e9;color:#2e7d32;border-color:#c8e6c9;}
+.sel-sit.s-IMPLANTADO{background-color:#fff3e0;color:#bf6000;border-color:#ffe0b2;}
+.sel-sit.s-CANCELADO{background-color:#f5f5f5;color:#757575;border-color:#e0e0e0;}
+.sel-sit.s-PARCIAL{background-color:#e3f2fd;color:#1565c0;border-color:#bbdefb;}
+.sel-sit.s-AGUARDAR{background-color:#f3e5f5;color:#6a1b9a;border-color:#e1bee7;}
+.sel-sit.saving{opacity:.6;}
 
-.col-forn { color: var(--cinza); font-size: 0.78rem; }
+.vazio{text-align:center;padding:3rem 1rem;color:var(--cinza);}
+.vazio .icon{font-size:2rem;margin-bottom:8px;}
 
-.vazio { text-align: center; padding: 3rem 1rem; color: var(--cinza); }
-.vazio .icon { font-size: 2.2rem; margin-bottom: 10px; }
+/* MODAL */
+.overlay{display:none;position:fixed;inset:0;background:rgba(0,0,0,.5);z-index:300;align-items:center;justify-content:center;padding:1rem;}
+.overlay.show{display:flex;}
+.modal{background:white;border-radius:16px;width:100%;max-width:500px;max-height:90vh;overflow-y:auto;padding:1.25rem;box-shadow:0 20px 60px rgba(0,0,0,.3);}
+.modal h2{font-size:.95rem;color:var(--verde);margin-bottom:3px;}
+.modal .sub{font-size:.75rem;color:var(--cinza);margin-bottom:1rem;}
+.modal label{font-size:.72rem;font-weight:600;color:#555;display:block;margin-bottom:4px;text-transform:uppercase;letter-spacing:.04em;}
+.modal input,.modal textarea{width:100%;padding:9px 11px;border:1.5px solid var(--borda);border-radius:9px;font-size:.88rem;margin-bottom:.85rem;font-family:inherit;background:#fafafa;}
+.modal textarea{min-height:220px;font-size:.8rem;line-height:1.6;resize:vertical;}
+.modal input:focus,.modal textarea:focus{outline:none;border-color:var(--verde);background:white;}
+.modal-foot{display:flex;gap:8px;justify-content:flex-end;}
+.btn-cancel{padding:8px 16px;border:1.5px solid var(--borda);background:white;border-radius:9px;font-size:.82rem;cursor:pointer;font-weight:600;color:#555;}
+.btn-send{padding:8px 18px;background:var(--verde);color:white;border:none;border-radius:9px;font-size:.82rem;cursor:pointer;font-weight:700;}
 
-.overlay {
-  display: none;
-  position: fixed;
-  inset: 0;
-  background: rgba(0,0,0,0.5);
-  z-index: 300;
-  align-items: center;
-  justify-content: center;
-  padding: 1rem;
-}
-.overlay.show { display: flex; }
-.modal {
-  background: white;
-  border-radius: 16px;
-  width: 100%;
-  max-width: 520px;
-  max-height: 90vh;
-  overflow-y: auto;
-  padding: 1.5rem;
-  box-shadow: 0 20px 60px rgba(0,0,0,0.3);
-}
-.modal h2 { font-size: 1rem; color: var(--verde); margin-bottom: 4px; }
-.modal p.sub { font-size: 0.78rem; color: var(--cinza); margin-bottom: 1.25rem; }
-.modal label { font-size: 0.75rem; font-weight: 600; color: #555; display: block; margin-bottom: 5px; text-transform: uppercase; letter-spacing: 0.04em; }
-.modal input, .modal textarea {
-  width: 100%;
-  padding: 10px 12px;
-  border: 1.5px solid var(--borda);
-  border-radius: 9px;
-  font-size: 0.9rem;
-  margin-bottom: 1rem;
-  font-family: inherit;
-  background: #fafafa;
-}
-.modal textarea { min-height: 260px; font-size: 0.82rem; line-height: 1.6; resize: vertical; }
-.modal input:focus, .modal textarea:focus { outline: none; border-color: var(--verde); background: white; }
-.modal-footer { display: flex; gap: 10px; justify-content: flex-end; margin-top: 0.5rem; }
-.btn-cancel { padding: 9px 18px; border: 1.5px solid var(--borda); background: white; border-radius: 9px; font-size: 0.85rem; cursor: pointer; font-weight: 600; color: #555; }
-.btn-send { padding: 9px 20px; background: var(--verde); color: white; border: none; border-radius: 9px; font-size: 0.85rem; cursor: pointer; font-weight: 700; }
-.btn-send:hover { background: var(--verde2); }
-
-.toast {
-  position: fixed;
-  bottom: 1.5rem;
-  left: 50%;
-  transform: translateX(-50%) translateY(100px);
-  background: #333;
-  color: white;
-  padding: 10px 20px;
-  border-radius: 20px;
-  font-size: 0.85rem;
-  font-weight: 600;
-  z-index: 400;
-  transition: transform 0.3s;
-  white-space: nowrap;
-}
-.toast.show { transform: translateX(-50%) translateY(0); }
-.toast.verde { background: var(--verde); }
-
-@media (max-width: 640px) {
-  .resumo { grid-template-columns: repeat(2, 1fr); }
-  .col-forn, thead th:nth-child(6) { display: none; }
-  .busca { min-width: 120px; }
-  .btn-email span { display: none; }
-}
+/* TOAST */
+.toast{position:fixed;bottom:1.25rem;left:50%;transform:translateX(-50%) translateY(80px);background:#333;color:white;padding:9px 18px;border-radius:20px;font-size:.82rem;font-weight:600;z-index:400;transition:transform .3s;white-space:nowrap;}
+.toast.show{transform:translateX(-50%) translateY(0);}
+.toast.verde{background:var(--verde);}
 </style>
 </head>
 <body>
@@ -339,92 +158,75 @@ tbody td { padding: 8px 14px; font-size: 0.86rem; vertical-align: middle; }
     <h1>Checklist Início de Obra</h1>
     <p>INDOOR Paisagismo</p>
   </div>
-  <div class="sync-badge">
-    <div class="sync-dot"></div>
-    Google Sheets
-  </div>
+  <div class="sync"><div class="dot"></div>Google Sheets</div>
 </header>
 
-<div class="container">
-  <div id="loading">
-    <div class="spinner"></div>
-    Carregando obras...
-  </div>
+<div class="wrap">
+  <div id="loading"><div class="spin"></div>Carregando obras...</div>
 
-  <div id="appContent" style="display:none">
+  <div id="app" style="display:none">
+
     <div class="card">
-      <label>Selecione a Obra</label>
+      <span class="card-lbl">Selecione a Obra</span>
       <select id="selObra" class="sel-obra" onchange="selecionarObra()">
         <option value="">— escolha uma obra —</option>
       </select>
     </div>
 
     <div class="resumo" id="resumo" style="display:none">
-      <div class="stat total" onclick="setFiltro('TODOS')" id="statTotal">
-        <div class="num" id="nTotal">0</div><div class="lbl">Total</div>
-      </div>
-      <div class="stat pedir" onclick="setFiltro('PEDIR')" id="statPedir">
-        <div class="num" id="nPedir">0</div><div class="lbl">A Pedir</div>
-      </div>
-      <div class="stat estoque" onclick="setFiltro('EM ESTOQUE')" id="statEstoque">
-        <div class="num" id="nEstoque">0</div><div class="lbl">Em Estoque</div>
-      </div>
-      <div class="stat impl" onclick="setFiltro('IMPLANTADO')" id="statImpl">
-        <div class="num" id="nImpl">0</div><div class="lbl">Implantado</div>
-      </div>
+      <div class="stat s-total" onclick="setFiltro('TODOS')" id="stTotal"><div class="num" id="nTotal">0</div><div class="lbl">Total</div></div>
+      <div class="stat s-pedir" onclick="setFiltro('PEDIR')" id="stPedir"><div class="num" id="nPedir">0</div><div class="lbl">A Pedir</div></div>
+      <div class="stat s-est"   onclick="setFiltro('EM ESTOQUE')" id="stEst"><div class="num" id="nEst">0</div><div class="lbl">Em Estoque</div></div>
+      <div class="stat s-impl"  onclick="setFiltro('IMPLANTADO')" id="stImpl"><div class="num" id="nImpl">0</div><div class="lbl">Implantado</div></div>
     </div>
 
-    <div class="barra-filtros" id="barraFiltros" style="display:none">
-      <button class="fbtn on" id="fbtnTodos" onclick="setFiltro('TODOS')">Todos</button>
-      <button class="fbtn" id="fbtnPedir" onclick="setFiltro('PEDIR')">🔴 A Pedir</button>
-      <button class="fbtn" id="fbtnParcial" onclick="setFiltro('PARCIAL')">🔵 Parcial</button>
-      <button class="fbtn" id="fbtnEstoque" onclick="setFiltro('EM ESTOQUE')">🟢 Em Estoque</button>
-      <button class="fbtn" id="fbtnImpl" onclick="setFiltro('IMPLANTADO')">✅ Implantado</button>
-      <button class="fbtn" id="fbtnAguardar" onclick="setFiltro('AGUARDAR')">🟣 Aguardar</button>
-
+    <div class="filtros" id="filtros" style="display:none">
+      <button class="fbtn on" id="fb0" onclick="setFiltro('TODOS')">Todos</button>
+      <button class="fbtn" id="fb1" onclick="setFiltro('PEDIR')">🔴 Pedir</button>
+      <button class="fbtn" id="fb2" onclick="setFiltro('PARCIAL')">🔵 Parcial</button>
+      <button class="fbtn" id="fb3" onclick="setFiltro('EM ESTOQUE')">🟢 Estoque</button>
+      <button class="fbtn" id="fb4" onclick="setFiltro('IMPLANTADO')">✅ Implant.</button>
+      <button class="fbtn" id="fb5" onclick="setFiltro('AGUARDAR')">🟣 Aguardar</button>
       <select class="sel-forn" id="selForn" onchange="renderTabela()">
-        <option value="">🏭 Todos fornecedores</option>
+        <option value="">🏭 Fornecedor</option>
       </select>
-
-      <input class="busca" type="text" placeholder="🔍 Buscar produto..." id="busca" oninput="renderTabela()">
-      <button class="btn-email" onclick="abrirModalEmail()">📧 <span>Enviar Pedido</span></button>
+      <input class="busca" type="text" placeholder="🔍 Produto..." id="busca" oninput="renderTabela()">
+      <button class="btn-email" onclick="abrirEmail()">📧</button>
     </div>
 
     <div class="tbl-wrap" id="tblWrap" style="display:none">
-      <table>
+      <table id="tabela">
         <thead>
           <tr>
             <th>Produto</th>
-            <th style="width:70px;text-align:center">Qtde</th>
-            <th style="width:90px;text-align:center">Estoque</th>
-            <th style="width:80px;text-align:center">A Pedir</th>
+            <th style="width:60px;text-align:center">Qtde</th>
+            <th style="width:80px;text-align:center">Estoque</th>
+            <th style="width:70px;text-align:center">A Pedir</th>
             <th style="width:140px">Situação</th>
-            <th style="width:100px">Fornecedor</th>
+            <th style="width:90px">Fornecedor</th>
           </tr>
         </thead>
         <tbody id="tbody"></tbody>
       </table>
-      <div id="vmsg" class="vazio" style="display:none">
-        <div class="icon">📋</div>
-        Nenhum item encontrado para este filtro.
-      </div>
+      <div id="vmsg" class="vazio" style="display:none"><div class="icon">📋</div>Nenhum item encontrado.</div>
     </div>
+
   </div>
 </div>
 
 <div class="overlay" id="overlay">
   <div class="modal">
     <h2>📧 Enviar Lista de Pedidos</h2>
-    <p class="sub">Itens agrupados por fornecedor · obra selecionada</p>
+    <p class="sub">Itens a pedir agrupados por fornecedor</p>
     <label>Destinatário</label>
     <input type="email" id="emailTo" placeholder="fornecedor@email.com">
     <label>Assunto</label>
-    <input type="text" id="emailSubject">
+    <input type="text" id="emailSubj">
     <label>Mensagem</label>
     <textarea id="emailBody"></textarea>
-    <div class="modal-footer">
+    <div class="modal-foot">
       <button class="btn-cancel" onclick="fecharModal()">Cancelar</button>
-      <button class="btn-send" onclick="enviarEmail()">Enviar por E-mail</button>
+      <button class="btn-send" onclick="enviarEmail()">Enviar</button>
     </div>
   </div>
 </div>
@@ -432,296 +234,250 @@ tbody td { padding: 8px 14px; font-size: 0.86rem; vertical-align: middle; }
 <div class="toast" id="toast"></div>
 
 <script>
-const SHEET_ID  = '1iT5-PI4EH0noG4-wsrI8h63lZutskZWSRxty2rmmVGQ';
-const API_KEY   = 'AIzaSyCe5c7z-CBesIw3hR9TOBl8EYUdEtkl0XY';
-const SHEET_NAME = 'PEDIDOS';
-const SITUACOES  = ['PEDIR','EM ESTOQUE','PARCIAL','IMPLANTADO','CANCELADO','AGUARDAR'];
+const SHEET_ID = '1iT5-PI4EH0noG4-wsrI8h63lZutskZWSRxty2rmmVGQ';
+const API_KEY  = 'AIzaSyCe5c7z-CBesIw3hR9TOBl8EYUdEtkl0XY';
+const TAB      = 'PEDIDOS';
+const SITS     = ['PEDIR','EM ESTOQUE','PARCIAL','IMPLANTADO','CANCELADO','AGUARDAR'];
 
-let obraAtual = [];
-let nomeObra  = '';
-let filtro    = 'TODOS';
-let cEstoque, cSituacao;
+let obra=[], nomeObra='', filtro='TODOS', cEst, cSit;
 
-async function carregarPlanilha() {
-  try {
-    const range = encodeURIComponent(`${SHEET_NAME}!A:Z`);
-    const url   = `https://sheets.googleapis.com/v4/spreadsheets/${SHEET_ID}/values/${range}?key=${API_KEY}`;
-    const res   = await fetch(url);
-    const data  = await res.json();
-    if (data.error) throw new Error(data.error.message);
+async function carregarPlanilha(){
+  try{
+    const url = `https://sheets.googleapis.com/v4/spreadsheets/${SHEET_ID}/values/${encodeURIComponent(TAB+'!A:Z')}?key=${API_KEY}`;
+    const d   = await (await fetch(url)).json();
+    if(d.error) throw new Error(d.error.message);
+    const rows=d.values||[], hdr=rows[0]||[];
+    const ix=n=>hdr.findIndex(h=>h&&h.toString().toLowerCase().includes(n));
+    const cCli=ix('cliente')>=0?ix('cliente'):0;
+    const cProd=ix('produto')>=0?ix('produto'):1;
+    const cQtde=hdr.findIndex(h=>h&&h.toString().toLowerCase()==='qtde');
+    const iQtde=cQtde>=0?cQtde:2;
+    cSit=ix('situa')>=0?ix('situa'):22;
+    cEst=ix('estoque')>=0?ix('estoque'):23;
+    const cForn=ix('fornec')>=0?ix('fornec'):-1;
 
-    const rows   = data.values || [];
-    const header = rows[0] || [];
-
-    // Detectar colunas pelo cabeçalho
-    const idx = name => header.findIndex(h => h && h.toString().toLowerCase().includes(name));
-    const cCliente  = idx('cliente')  >= 0 ? idx('cliente')  : 0;
-    const cProduto  = idx('produto')  >= 0 ? idx('produto')  : 1;
-    const cQtde     = header.findIndex(h => h && h.toString().toLowerCase() === 'qtde') >= 0
-                      ? header.findIndex(h => h && h.toString().toLowerCase() === 'qtde') : 2;
-    cSituacao       = idx('situa')    >= 0 ? idx('situa')    : 22;
-    cEstoque        = idx('estoque')  >= 0 ? idx('estoque')  : 23;
-    const cForn     = idx('fornec')   >= 0 ? idx('fornec')   : -1;
-
-    // Montar obras
-    const obras = {};
-    for (let i = 1; i < rows.length; i++) {
-      const row     = rows[i];
-      const cliente = (row[cCliente] || '').toString().trim();
-      const produto  = (row[cProduto]  || '').toString().trim();
-      if (!cliente || !produto) continue;
-      if (!obras[cliente]) obras[cliente] = [];
-
-      const qtdeTotal = parseFloat(row[cQtde]) || 0;
-      const sitRaw    = (row[cSituacao] || '').toString().trim();
-      const estRaw    = row[cEstoque];
-      const qtdeEst   = (estRaw !== undefined && estRaw !== '') ? parseFloat(estRaw) : null;
-      const qtdePedir = qtdeEst !== null ? Math.max(0, qtdeTotal - qtdeEst) : qtdeTotal;
-      const forn      = cForn >= 0 ? (row[cForn] || '').toString().replace('.','').trim() : '';
-
-      let sitCalc = sitRaw;
-      if (qtdeEst !== null && sitRaw !== 'IMPLANTADO' && sitRaw !== 'CANCELADO') {
-        if (qtdeEst >= qtdeTotal)  sitCalc = 'EM ESTOQUE';
-        else if (qtdeEst > 0)      sitCalc = 'PARCIAL';
-        else                        sitCalc = 'PEDIR';
+    const obras={};
+    for(let i=1;i<rows.length;i++){
+      const r=rows[i];
+      const cli=(r[cCli]||'').toString().trim();
+      const prod=(r[cProd]||'').toString().trim();
+      if(!cli||!prod) continue;
+      if(!obras[cli]) obras[cli]=[];
+      const qtdeTot=parseFloat(r[iQtde])||0;
+      const sitRaw=(r[cSit]||'').toString().trim();
+      const estRaw=r[cEst];
+      const qtdeEst=(estRaw!==undefined&&estRaw!=='')?parseFloat(estRaw):null;
+      const qtdePed=qtdeEst!==null?Math.max(0,qtdeTot-qtdeEst):qtdeTot;
+      const forn=cForn>=0?(r[cForn]||'').toString().replace('.','').trim():'';
+      let sit=sitRaw;
+      if(qtdeEst!==null&&sitRaw!=='IMPLANTADO'&&sitRaw!=='CANCELADO'){
+        if(qtdeEst>=qtdeTot) sit='EM ESTOQUE';
+        else if(qtdeEst>0)   sit='PARCIAL';
+        else                  sit='PEDIR';
       }
-
-      obras[cliente].push({ rowIdx: i+1, produto, qtdeTotal, qtdeEst, qtdePedir, situacao: sitCalc, fornecedor: forn });
+      obras[cli].push({ri:i+1,prod,qtdeTot,qtdeEst,qtdePed,sit,forn});
     }
-
-    const lista = Object.keys(obras).filter(k => obras[k].length > 0);
-    if (!lista.length) {
-      document.getElementById('loading').innerHTML = '<div style="color:#c62828">❌ Nenhuma obra encontrada.</div>';
-      return;
-    }
-
-    const sel = document.getElementById('selObra');
-    lista.forEach(nome => {
-      const o = document.createElement('option');
-      o.value = nome;
-      o.textContent = `${nome}  (${obras[nome].length} itens)`;
-      sel.appendChild(o);
-    });
-
-    window._obras = obras;
-    document.getElementById('loading').style.display = 'none';
-    document.getElementById('appContent').style.display = 'block';
-
-  } catch(e) {
-    document.getElementById('loading').innerHTML = `<div style="color:#c62828">❌ ${e.message}</div>`;
-  }
+    const lista=Object.keys(obras).filter(k=>obras[k].length>0);
+    if(!lista.length){document.getElementById('loading').innerHTML='<div style="color:#c62828">❌ Nenhuma obra encontrada.</div>';return;}
+    const sel=document.getElementById('selObra');
+    lista.forEach(n=>{const o=document.createElement('option');o.value=n;o.textContent=`${n}  (${obras[n].length})`;sel.appendChild(o);});
+    window._obras=obras;
+    document.getElementById('loading').style.display='none';
+    document.getElementById('app').style.display='block';
+  }catch(e){document.getElementById('loading').innerHTML=`<div style="color:#c62828">❌ ${e.message}</div>`;}
 }
 
-function selecionarObra() {
-  nomeObra  = document.getElementById('selObra').value;
-  obraAtual = nomeObra ? (window._obras[nomeObra] || []) : [];
+function selecionarObra(){
+  nomeObra=document.getElementById('selObra').value;
+  obra=nomeObra?(window._obras[nomeObra]||[]):[];
+  if(!nomeObra){['resumo','filtros','tblWrap'].forEach(id=>document.getElementById(id).style.display='none');return;}
+  filtro='TODOS';
+  atualizarForn();
+  document.getElementById('busca').value='';
+  document.getElementById('resumo').style.display='grid';
+  document.getElementById('filtros').style.display='flex';
+  document.getElementById('tblWrap').style.display='block';
+  cards(); renderTabela();
+}
 
-  if (!nomeObra) {
-    ['resumo','barraFiltros','tblWrap'].forEach(id => document.getElementById(id).style.display = 'none');
-    return;
-  }
+function atualizarForn(){
+  const sel=document.getElementById('selForn');
+  const forns=[...new Set(obra.map(i=>i.forn).filter(f=>f))].sort();
+  sel.innerHTML='<option value="">🏭 Fornecedor</option>';
+  forns.forEach(f=>{const o=document.createElement('option');o.value=f;o.textContent=f;sel.appendChild(o);});
+}
 
-  filtro = 'TODOS';
-  atualizarFornecedores();
-  document.getElementById('busca').value = '';
-  document.getElementById('resumo').style.display      = 'grid';
-  document.getElementById('barraFiltros').style.display = 'flex';
-  document.getElementById('tblWrap').style.display      = 'block';
-  atualizarCards();
+function cards(){
+  document.getElementById('nTotal').textContent=obra.length;
+  document.getElementById('nPedir').textContent=obra.filter(i=>i.sit==='PEDIR'||i.sit==='PARCIAL').length;
+  document.getElementById('nEst').textContent=obra.filter(i=>i.sit==='EM ESTOQUE').length;
+  document.getElementById('nImpl').textContent=obra.filter(i=>i.sit==='IMPLANTADO').length;
+}
+
+const FBMAP={'TODOS':'fb0','PEDIR':'fb1','PARCIAL':'fb2','EM ESTOQUE':'fb3','IMPLANTADO':'fb4','AGUARDAR':'fb5'};
+const STMAP={'TODOS':'stTotal','PEDIR':'stPedir','EM ESTOQUE':'stEst','IMPLANTADO':'stImpl'};
+
+function setFiltro(f){
+  filtro=f;
+  ['fb0','fb1','fb2','fb3','fb4','fb5'].forEach(id=>document.getElementById(id).classList.remove('on'));
+  if(FBMAP[f]) document.getElementById(FBMAP[f]).classList.add('on');
+  ['stTotal','stPedir','stEst','stImpl'].forEach(id=>document.getElementById(id).classList.remove('ativo'));
+  if(STMAP[f]) document.getElementById(STMAP[f]).classList.add('ativo');
   renderTabela();
 }
 
-function atualizarFornecedores() {
-  const sel   = document.getElementById('selForn');
-  const forns = [...new Set(obraAtual.map(i => i.fornecedor).filter(f => f))].sort();
-  sel.innerHTML = '<option value="">🏭 Todos fornecedores</option>';
-  forns.forEach(f => {
-    const o = document.createElement('option');
-    o.value = f; o.textContent = f;
-    sel.appendChild(o);
-  });
+function isMobile(){return window.innerWidth<=640;}
+
+function renderTabela(){
+  const q=document.getElementById('busca').value.toLowerCase();
+  const forn=document.getElementById('selForn').value;
+  document.getElementById('selForn').classList.toggle('ativo',!!forn);
+  let items=obra;
+  if(filtro!=='TODOS') items=items.filter(i=>i.sit===filtro);
+  if(forn) items=items.filter(i=>i.forn===forn);
+  if(q) items=items.filter(i=>i.prod.toLowerCase().includes(q));
+  const tb=document.getElementById('tbody');
+  const vm=document.getElementById('vmsg');
+  if(!items.length){tb.innerHTML='';vm.style.display='block';return;}
+  vm.style.display='none';
+  const mob=isMobile();
+  const opts=SITS.map(s=>`<option value="${s}">${s}</option>`).join('');
+
+  if(mob){
+    // Layout mobile: cards por item
+    tb.innerHTML=items.map(item=>{
+      const estVal=item.qtdeEst!==null?item.qtdeEst:'';
+      const pedVal=item.qtdePed>0?item.qtdePed:(item.qtdeEst===null?item.qtdeTot:'—');
+      const sc='s-'+item.sit.replace(/ /g,'-');
+      const selOpts=SITS.map(s=>`<option value="${s}"${s===item.sit?' selected':''}>${s}</option>`).join('');
+      return `<tr>
+        <td class="col-prod" colspan="6">
+          <div style="font-weight:600;font-size:.9rem;margin-bottom:6px">${item.prod}</div>
+          <div style="display:flex;gap:12px;align-items:center;margin-bottom:8px;flex-wrap:wrap">
+            <div>
+              <span style="font-size:.6rem;color:var(--cinza);text-transform:uppercase;display:block;margin-bottom:1px">Qtde</span>
+              <span style="font-weight:700;color:var(--verde)">${item.qtdeTot}</span>
+            </div>
+            <div>
+              <span style="font-size:.6rem;color:var(--cinza);text-transform:uppercase;display:block;margin-bottom:1px">Estoque</span>
+              <input class="inp-est" type="number" min="0" value="${estVal}" placeholder="—" onchange="salvarEst(this,${item.ri})">
+            </div>
+            <div>
+              <span style="font-size:.6rem;color:var(--cinza);text-transform:uppercase;display:block;margin-bottom:1px">A Pedir</span>
+              <span style="font-weight:700;color:var(--verm)">${pedVal}</span>
+            </div>
+          </div>
+          <div style="display:flex;align-items:center;gap:8px;flex-wrap:wrap">
+            <select class="sel-sit ${sc}" onchange="salvarSit(this,${item.ri})">${selOpts}</select>
+            ${item.forn?`<span style="font-size:.75rem;color:var(--cinza)">${item.forn}</span>`:''}
+          </div>
+        </td>
+      </tr>`;
+    }).join('');
+  } else {
+    // Layout desktop: tabela normal
+    tb.innerHTML=items.map(item=>{
+      const estVal=item.qtdeEst!==null?item.qtdeEst:'';
+      const pedVal=item.qtdePed>0?item.qtdePed:(item.qtdeEst===null?item.qtdeTot:'—');
+      const sc='s-'+item.sit.replace(/ /g,'-');
+      const selOpts=SITS.map(s=>`<option value="${s}"${s===item.sit?' selected':''}>${s}</option>`).join('');
+      return `<tr>
+        <td class="col-prod">${item.prod}</td>
+        <td class="col-num col-tot">${item.qtdeTot}</td>
+        <td class="col-num"><input class="inp-est" type="number" min="0" value="${estVal}" placeholder="—" onchange="salvarEst(this,${item.ri})"></td>
+        <td class="col-num col-ped">${pedVal}</td>
+        <td><select class="sel-sit ${sc}" onchange="salvarSit(this,${item.ri})">${selOpts}</select></td>
+        <td class="col-forn">${item.forn||'—'}</td>
+      </tr>`;
+    }).join('');
+  }
 }
 
-function atualizarCards() {
-  document.getElementById('nTotal').textContent   = obraAtual.length;
-  document.getElementById('nPedir').textContent   = obraAtual.filter(i => i.situacao==='PEDIR'||i.situacao==='PARCIAL').length;
-  document.getElementById('nEstoque').textContent = obraAtual.filter(i => i.situacao==='EM ESTOQUE').length;
-  document.getElementById('nImpl').textContent    = obraAtual.filter(i => i.situacao==='IMPLANTADO').length;
-}
+window.addEventListener('resize', ()=>{ if(obra.length) renderTabela(); });
 
-function setFiltro(f) {
-  filtro = f;
-  // atualizar botões
-  ['fbtnTodos','fbtnPedir','fbtnParcial','fbtnEstoque','fbtnImpl','fbtnAguardar'].forEach(id => {
-    document.getElementById(id).classList.remove('on');
-  });
-  const map = {'TODOS':'fbtnTodos','PEDIR':'fbtnPedir','PARCIAL':'fbtnParcial','EM ESTOQUE':'fbtnEstoque','IMPLANTADO':'fbtnImpl','AGUARDAR':'fbtnAguardar'};
-  if (map[f]) document.getElementById(map[f]).classList.add('on');
-  // highlight card
-  ['statTotal','statPedir','statEstoque','statImpl'].forEach(id => document.getElementById(id).classList.remove('ativo'));
-  const cmap = {'TODOS':'statTotal','PEDIR':'statPedir','EM ESTOQUE':'statEstoque','IMPLANTADO':'statImpl'};
-  if (cmap[f]) document.getElementById(cmap[f]).classList.add('ativo');
-  renderTabela();
-}
-
-function renderTabela() {
-  const q    = document.getElementById('busca').value.toLowerCase();
-  const forn = document.getElementById('selForn').value;
-  document.getElementById('selForn').classList.toggle('ativo', !!forn);
-
-  let items = obraAtual;
-  if (filtro !== 'TODOS') items = items.filter(i => i.situacao === filtro);
-  if (forn) items = items.filter(i => i.fornecedor === forn);
-  if (q)    items = items.filter(i => i.produto.toLowerCase().includes(q));
-
-  const tb = document.getElementById('tbody');
-  const vm = document.getElementById('vmsg');
-
-  if (!items.length) { tb.innerHTML = ''; vm.style.display = 'block'; return; }
-  vm.style.display = 'none';
-
-  tb.innerHTML = items.map(item => {
-    const estVal   = item.qtdeEst !== null ? item.qtdeEst : '';
-    const pedirVal = item.qtdePedir > 0 ? item.qtdePedir : (item.qtdeEst === null ? item.qtdeTotal : '—');
-    const sitClass = 's-' + item.situacao.replace(/ /g, '-');
-    const opts     = SITUACOES.map(s =>
-      `<option value="${s}" ${s===item.situacao?'selected':''}>${s}</option>`
-    ).join('');
-
-    return `<tr>
-      <td class="col-produto">${item.produto}</td>
-      <td class="col-num col-total">${item.qtdeTotal}</td>
-      <td class="col-num">
-        <input class="input-estoque" type="number" min="0" value="${estVal}" placeholder="—"
-          onchange="salvarEstoque(this,${item.rowIdx})">
-      </td>
-      <td class="col-num col-pedir">${pedirVal}</td>
-      <td>
-        <select class="sel-sit ${sitClass}" onchange="salvarSituacao(this,${item.rowIdx})">${opts}</select>
-      </td>
-      <td class="col-forn">${item.fornecedor || '—'}</td>
-    </tr>`;
-  }).join('');
-}
-
-// Salvar Qtde Estoque
-async function salvarEstoque(input, rowIdx) {
-  const val = input.value.trim();
+async function salvarEst(input,ri){
+  const val=input.value.trim();
   input.classList.add('saving');
-  try {
-    const col   = String.fromCharCode(65 + cEstoque);
-    const range = encodeURIComponent(`${SHEET_NAME}!${col}${rowIdx}`);
-    const url   = `https://sheets.googleapis.com/v4/spreadsheets/${SHEET_ID}/values/${range}?valueInputOption=RAW&key=${API_KEY}`;
-    const res   = await fetch(url, {
-      method: 'PUT',
-      headers: {'Content-Type':'application/json'},
-      body: JSON.stringify({values:[[val===''?'':Number(val)]]})
-    });
-    const d = await res.json();
-    if (d.error) throw new Error(d.error.message);
+  try{
+    const col=String.fromCharCode(65+cEst);
+    const url=`https://sheets.googleapis.com/v4/spreadsheets/${SHEET_ID}/values/${encodeURIComponent(TAB+'!'+col+ri)}?valueInputOption=RAW&key=${API_KEY}`;
+    const res=await fetch(url,{method:'PUT',headers:{'Content-Type':'application/json'},body:JSON.stringify({values:[[val===''?'':Number(val)]]})});
+    const d=await res.json();
+    if(d.error) throw new Error(d.error.message);
     input.classList.remove('saving');
     input.classList.add('saved');
-    setTimeout(() => input.classList.remove('saved'), 1500);
-
-    const item = obraAtual.find(i => i.rowIdx === rowIdx);
-    if (item) {
-      item.qtdeEst   = val==='' ? null : Number(val);
-      item.qtdePedir = item.qtdeEst !== null ? Math.max(0, item.qtdeTotal - item.qtdeEst) : item.qtdeTotal;
-      if (item.situacao !== 'IMPLANTADO' && item.situacao !== 'CANCELADO') {
-        if (!item.qtdeEst || item.qtdeEst === 0) item.situacao = 'PEDIR';
-        else if (item.qtdeEst >= item.qtdeTotal)  item.situacao = 'EM ESTOQUE';
-        else                                       item.situacao = 'PARCIAL';
+    setTimeout(()=>input.classList.remove('saved'),1500);
+    const item=obra.find(i=>i.ri===ri);
+    if(item){
+      item.qtdeEst=val===''?null:Number(val);
+      item.qtdePed=item.qtdeEst!==null?Math.max(0,item.qtdeTot-item.qtdeEst):item.qtdeTot;
+      if(item.sit!=='IMPLANTADO'&&item.sit!=='CANCELADO'){
+        if(!item.qtdeEst||item.qtdeEst===0) item.sit='PEDIR';
+        else if(item.qtdeEst>=item.qtdeTot)  item.sit='EM ESTOQUE';
+        else                                   item.sit='PARCIAL';
       }
     }
-    atualizarCards();
-    showToast('✅ Estoque salvo', 'verde');
-  } catch(e) {
-    input.classList.remove('saving');
-    showToast('❌ ' + e.message);
-  }
+    cards(); showToast('✅ Estoque salvo','verde');
+  }catch(e){input.classList.remove('saving');showToast('❌ '+e.message);}
 }
 
-// Salvar Situação
-async function salvarSituacao(sel, rowIdx) {
-  const val      = sel.value;
-  const sitClass = 's-' + val.replace(/ /g,'-');
-  sel.className  = 'sel-sit saving';
-  try {
-    const col   = String.fromCharCode(65 + cSituacao);
-    const range = encodeURIComponent(`${SHEET_NAME}!${col}${rowIdx}`);
-    const url   = `https://sheets.googleapis.com/v4/spreadsheets/${SHEET_ID}/values/${range}?valueInputOption=RAW&key=${API_KEY}`;
-    const res   = await fetch(url, {
-      method: 'PUT',
-      headers: {'Content-Type':'application/json'},
-      body: JSON.stringify({values:[[val]]})
-    });
-    const d = await res.json();
-    if (d.error) throw new Error(d.error.message);
-    sel.className = `sel-sit ${sitClass}`;
-
-    const item = obraAtual.find(i => i.rowIdx === rowIdx);
-    if (item) item.situacao = val;
-    atualizarCards();
-    showToast('✅ Situação atualizada', 'verde');
-  } catch(e) {
-    sel.className = `sel-sit ${sitClass}`;
-    showToast('❌ ' + e.message);
-  }
+async function salvarSit(sel,ri){
+  const val=sel.value;
+  const sc='s-'+val.replace(/ /g,'-');
+  sel.className='sel-sit saving';
+  try{
+    const col=String.fromCharCode(65+cSit);
+    const url=`https://sheets.googleapis.com/v4/spreadsheets/${SHEET_ID}/values/${encodeURIComponent(TAB+'!'+col+ri)}?valueInputOption=RAW&key=${API_KEY}`;
+    const res=await fetch(url,{method:'PUT',headers:{'Content-Type':'application/json'},body:JSON.stringify({values:[[val]]})});
+    const d=await res.json();
+    if(d.error) throw new Error(d.error.message);
+    sel.className=`sel-sit ${sc}`;
+    const item=obra.find(i=>i.ri===ri);
+    if(item) item.sit=val;
+    cards(); showToast('✅ Situação salva','verde');
+  }catch(e){sel.className=`sel-sit ${sc}`;showToast('❌ '+e.message);}
 }
 
-// Modal e-mail
-function abrirModalEmail() {
-  if (!nomeObra) return;
-  const forn = document.getElementById('selForn').value;
-  let aPedir = obraAtual.filter(i => i.situacao==='PEDIR'||i.situacao==='PARCIAL');
-  if (forn) aPedir = aPedir.filter(i => i.fornecedor === forn);
-  if (!aPedir.length) { showToast('Nenhum item a pedir com estes filtros.'); return; }
-
-  const grupos = {};
-  aPedir.forEach(i => {
-    const f = i.fornecedor || 'Sem fornecedor';
-    if (!grupos[f]) grupos[f] = [];
-    grupos[f].push(i);
-  });
-
-  let corpo = `Pedido de Materiais\nObra: ${nomeObra}\n${'─'.repeat(40)}\n\n`;
-  Object.entries(grupos).forEach(([f, itens]) => {
-    corpo += `FORNECEDOR: ${f.toUpperCase()}\n`;
-    itens.forEach(i => {
-      const q = i.situacao==='PARCIAL' ? `${i.qtdePedir} un (${i.qtdeEst} em estoque)` : `${i.qtdePedir} un`;
-      corpo += `  • ${i.produto} — ${q}\n`;
+function abrirEmail(){
+  if(!nomeObra) return;
+  const forn=document.getElementById('selForn').value;
+  let aPedir=obra.filter(i=>i.sit==='PEDIR'||i.sit==='PARCIAL');
+  if(forn) aPedir=aPedir.filter(i=>i.forn===forn);
+  if(!aPedir.length){showToast('Nenhum item a pedir com estes filtros.');return;}
+  const grupos={};
+  aPedir.forEach(i=>{const f=i.forn||'Sem fornecedor';if(!grupos[f])grupos[f]=[];grupos[f].push(i);});
+  let corpo=`Pedido de Materiais\nObra: ${nomeObra}\n${'─'.repeat(38)}\n\n`;
+  Object.entries(grupos).forEach(([f,itens])=>{
+    corpo+=`FORNECEDOR: ${f.toUpperCase()}\n`;
+    itens.forEach(i=>{
+      const q=i.sit==='PARCIAL'?`${i.qtdePed} un (${i.qtdeEst} em estoque)`:`${i.qtdePed} un`;
+      corpo+=`  • ${i.prod} — ${q}\n`;
     });
-    corpo += '\n';
+    corpo+='\n';
   });
-  corpo += `${'─'.repeat(40)}\nINDOOR Paisagismo · Londrina – PR`;
-
-  document.getElementById('emailSubject').value = `Pedido de Materiais – ${nomeObra}${forn?' ('+forn+')':''}`;
-  document.getElementById('emailBody').value    = corpo;
-  document.getElementById('emailTo').value      = '';
+  corpo+=`${'─'.repeat(38)}\nINDOOR Paisagismo · Londrina – PR`;
+  document.getElementById('emailSubj').value=`Pedido – ${nomeObra}${forn?' ('+forn+')':''}`;
+  document.getElementById('emailBody').value=corpo;
+  document.getElementById('emailTo').value='';
   document.getElementById('overlay').classList.add('show');
 }
 
-function fecharModal() { document.getElementById('overlay').classList.remove('show'); }
+function fecharModal(){document.getElementById('overlay').classList.remove('show');}
 
-function enviarEmail() {
-  const to      = document.getElementById('emailTo').value.trim();
-  const subject = encodeURIComponent(document.getElementById('emailSubject').value);
-  const body    = encodeURIComponent(document.getElementById('emailBody').value);
-  if (!to) { showToast('Informe o e-mail do destinatário.'); return; }
-  window.open(`mailto:${to}?subject=${subject}&body=${body}`);
-  fecharModal();
-  showToast('📧 Abrindo cliente de e-mail...', 'verde');
+function enviarEmail(){
+  const to=document.getElementById('emailTo').value.trim();
+  if(!to){showToast('Informe o e-mail.');return;}
+  window.open(`mailto:${to}?subject=${encodeURIComponent(document.getElementById('emailSubj').value)}&body=${encodeURIComponent(document.getElementById('emailBody').value)}`);
+  fecharModal(); showToast('📧 Abrindo e-mail...','verde');
 }
 
-function showToast(msg, tipo='') {
-  const t = document.getElementById('toast');
-  t.textContent = msg;
-  t.className   = 'toast show' + (tipo?' '+tipo:'');
-  setTimeout(() => t.classList.remove('show'), 3000);
+function showToast(msg,tipo=''){
+  const t=document.getElementById('toast');
+  t.textContent=msg; t.className='toast show'+(tipo?' '+tipo:'');
+  setTimeout(()=>t.classList.remove('show'),3000);
 }
 
-document.getElementById('overlay').addEventListener('click', e => { if (e.target===e.currentTarget) fecharModal(); });
-
+document.getElementById('overlay').addEventListener('click',e=>{if(e.target===e.currentTarget)fecharModal();});
 carregarPlanilha();
 </script>
 </body>
