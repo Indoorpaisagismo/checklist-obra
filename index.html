@@ -204,6 +204,7 @@ header p{font-size:.68rem;opacity:.65;margin-top:1px;}
             <th style="width:70px;text-align:center">A Pedir</th>
             <th style="width:140px">Situação</th>
             <th style="width:90px">Fornecedor</th>
+            <th style="width:80px;text-align:right">Preço Meta</th>
           </tr>
         </thead>
         <tbody id="tbody"></tbody>
@@ -239,7 +240,7 @@ const API_KEY  = 'AIzaSyCe5c7z-CBesIw3hR9TOBl8EYUdEtkl0XY';
 const TAB      = 'PEDIDOS';
 const SITS     = ['PEDIR','EM ESTOQUE','PARCIAL','IMPLANTADO','CANCELADO','AGUARDAR'];
 
-let obra=[], nomeObra='', filtro='TODOS', cEst, cSit;
+let obra=[], nomeObra='', filtro='TODOS', cEst, cSit, cMeta;
 
 async function carregarPlanilha(){
   try{
@@ -254,6 +255,7 @@ async function carregarPlanilha(){
     cSit=ix('situa')>=0?ix('situa'):22;
     cEst=ix('estoque')>=0?ix('estoque'):23;
     const cForn=ix('fornec')>=0?ix('fornec'):-1;
+    cMeta=ix('meta')>=0?ix('meta'):10; // coluna K = índice 10
 
     const obras={};
     for(let i=1;i<rows.length;i++){
@@ -274,7 +276,9 @@ async function carregarPlanilha(){
         else if(qtdeEst>0)   sit='PARCIAL';
         else                  sit='PEDIR';
       }
-      obras[cli].push({ri:i+1,prod,qtdeTot,qtdeEst,qtdePed,sit,forn});
+      const meta=cMeta>=0?(r[cMeta]||''):'' ;
+      const metaVal=meta!==''?parseFloat(meta):null;
+      obras[cli].push({ri:i+1,prod,qtdeTot,qtdeEst,qtdePed,sit,forn,meta:metaVal});
     }
     const lista=Object.keys(obras).filter(k=>obras[k].length>0);
     if(!lista.length){document.getElementById('loading').innerHTML='<div style="color:#c62828">❌ Nenhuma obra encontrada.</div>';return;}
@@ -369,6 +373,7 @@ function renderTabela(){
           <div style="display:flex;align-items:center;gap:8px;flex-wrap:wrap">
             <select class="sel-sit ${sc}" onchange="salvarSit(this,${item.ri})">${selOpts}</select>
             ${item.forn?`<span style="font-size:.75rem;color:var(--cinza)">${item.forn}</span>`:''}
+            ${item.meta!==null?`<span style="font-size:.75rem;color:var(--cinza);font-weight:600">R$ ${item.meta.toFixed(2).replace('.',',')}</span>`:''}
           </div>
         </td>
       </tr>`;
@@ -387,6 +392,7 @@ function renderTabela(){
         <td class="col-num col-ped">${pedVal}</td>
         <td><select class="sel-sit ${sc}" onchange="salvarSit(this,${item.ri})">${selOpts}</select></td>
         <td class="col-forn">${item.forn||'—'}</td>
+        <td style="text-align:right;font-size:.8rem;color:var(--cinza)">${item.meta!==null?'R$ '+item.meta.toFixed(2).replace('.',','):'—'}</td>
       </tr>`;
     }).join('');
   }
@@ -458,7 +464,8 @@ function abrirEmail(){
     corpo+=`FORNECEDOR: ${f.toUpperCase()}\n`;
     itens.forEach(i=>{
       const q=i.sit==='PARCIAL'?`${i.qtdePed} un (${i.qtdeEst} em estoque)`:`${i.qtdePed} un`;
-      corpo+=`  • ${i.prod} — ${q}\n`;
+      const preco=i.meta!==null?` | R$ ${i.meta.toFixed(2).replace('.',',')} un`:'';
+      corpo+=`  • ${i.prod} — ${q}${preco}\n`;
     });
     corpo+='\n';
   });
