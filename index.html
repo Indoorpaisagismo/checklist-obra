@@ -405,7 +405,7 @@ async function carregarPlanilha(){
     cSit=ix('situa')>=0?ix('situa'):22;
     cEst=ix('estoque')>=0?ix('estoque'):23;
     const cForn=ix('fornec')>=0?ix('fornec'):-1;
-    cSku=header.findIndex(h=>h&&h.toString().toLowerCase()==='sku');
+    cSku=hdr.findIndex(h=>h&&h.toString().toLowerCase()==='sku');
     if(cSku<0) cSku=3; // coluna D fallback
 
     const obras={};
