@@ -149,24 +149,6 @@ header p{font-size:.68rem;opacity:.65;margin-top:1px;}
 .toast.show{transform:translateX(-50%) translateY(0);}
 .toast.verde{background:var(--verde);}
 
-.btn-bling{background:#F7831B;color:white;border:none;padding:8px 14px;border-radius:20px;font-size:.75rem;font-weight:600;cursor:pointer;display:flex;align-items:center;gap:5px;white-space:nowrap;}
-.btn-bling:hover{background:#d96e10;}
-.btn-bling:disabled{opacity:.5;cursor:not-allowed;}
-
-.modal-prog{background:white;border-radius:16px;width:100%;max-width:460px;padding:1.5rem;box-shadow:0 20px 60px rgba(0,0,0,.3);}
-.modal-prog h2{font-size:.95rem;color:var(--verde);margin-bottom:1rem;}
-.prog-item{display:flex;align-items:center;gap:10px;padding:6px 0;border-bottom:1px solid #f0ece6;font-size:.82rem;}
-.prog-item:last-child{border-bottom:none;}
-.prog-icon{font-size:1rem;width:20px;text-align:center;flex-shrink:0;}
-.prog-nome{flex:1;color:#444;}
-.prog-status{font-size:.72rem;font-weight:600;white-space:nowrap;}
-.prog-status.ok{color:var(--vok);}
-.prog-status.err{color:var(--verm);}
-.prog-status.proc{color:var(--terra);}
-.prog-bar{height:4px;background:#eee;border-radius:4px;margin:12px 0 8px;}
-.prog-fill{height:4px;background:var(--verde);border-radius:4px;transition:width .3s;}
-.prog-resumo{font-size:.78rem;color:var(--cinza);text-align:center;margin-top:.5rem;}
-.prog-foot{display:flex;justify-content:flex-end;margin-top:1rem;}
 </style>
 </head>
 <body>
@@ -211,7 +193,6 @@ header p{font-size:.68rem;opacity:.65;margin-top:1px;}
       </select>
       <input class="busca" type="text" placeholder="🔍 Produto..." id="busca" oninput="renderTabela()">
       <button class="btn-email" onclick="abrirEmail()">📧</button>
-      <button class="btn-bling" id="btnBling" onclick="atualizarBling()" title="Atualizar custos e fornecedores do Bling">🔄 Bling</button>
     </div>
 
     <div class="tbl-wrap" id="tblWrap" style="display:none">
@@ -224,6 +205,7 @@ header p{font-size:.68rem;opacity:.65;margin-top:1px;}
             <th style="width:70px;text-align:center">A Pedir</th>
             <th style="width:140px">Situação</th>
             <th style="width:90px">Fornecedor</th>
+            <th style="width:85px;text-align:right">Preço Meta</th>
           </tr>
         </thead>
         <tbody id="tbody"></tbody>
@@ -231,18 +213,6 @@ header p{font-size:.68rem;opacity:.65;margin-top:1px;}
       <div id="vmsg" class="vazio" style="display:none"><div class="icon">📋</div>Nenhum item encontrado.</div>
     </div>
 
-  </div>
-</div>
-
-<div class="overlay" id="overlayBling">
-  <div class="modal-prog">
-    <h2>🔄 Atualizando do Bling</h2>
-    <div class="prog-bar"><div class="prog-fill" id="progFill" style="width:0%"></div></div>
-    <div class="prog-resumo" id="progResumo">Iniciando...</div>
-    <div id="progLista" style="max-height:260px;overflow-y:auto;margin-top:.75rem"></div>
-    <div class="prog-foot">
-      <button class="btn-cancel" id="btnFecharBling" onclick="fecharBling()" style="display:none">Fechar</button>
-    </div>
   </div>
 </div>
 
@@ -271,126 +241,7 @@ const API_KEY  = 'AIzaSyCe5c7z-CBesIw3hR9TOBl8EYUdEtkl0XY';
 const TAB      = 'PEDIDOS';
 const SITS     = ['PEDIR','EM ESTOQUE','PARCIAL','IMPLANTADO','CANCELADO','AGUARDAR'];
 
-let obra=[], nomeObra='', filtro='TODOS', cEst, cSit, cMeta, cSku;
-
-const SCRIPT_URL = 'https://script.google.com/macros/s/AKfycbxgDHT0dk2oEMUskbErw6Ijd_7H4gZQi_Sz9l840_bFfz3d8OI_MRULpojxgMnPNweN/exec';
-// Colunas (1-based para o Apps Script)
-const COL_CUSTO_REAL = 16; // P
-const COL_FORNECEDOR = 29; // AC
-
-async function salvarCelula(row, col, value) {
-  await fetch(SCRIPT_URL, {
-    method: 'POST',
-    mode: 'no-cors',
-    headers: {'Content-Type':'application/json'},
-    body: JSON.stringify({row, col, value})
-  });
-}
-
-async function buscarNoBling(sku, nome) {
-  // Chama Claude API com Bling MCP para buscar produto
-  const prompt = sku
-    ? `Busque no Bling o produto com SKU exato "${sku}". Retorne apenas JSON: {"precoCusto": number|null, "fornecedor": string|null}`
-    : `Busque no Bling o produto com nome similar a "${nome}". Retorne apenas JSON: {"precoCusto": number|null, "fornecedor": string|null}`;
-
-  try {
-    const res = await fetch('https://api.anthropic.com/v1/messages', {
-      method: 'POST',
-      headers: {'Content-Type':'application/json'},
-      body: JSON.stringify({
-        model: 'claude-sonnet-4-6',
-        max_tokens: 1000,
-        mcp_servers: [{
-          type: 'url',
-          url: 'https://mcp.bling.com.br/mcp',
-          name: 'bling-mcp'
-        }],
-        system: 'Você é um assistente que busca dados de produtos no Bling ERP. Sempre retorne APENAS um JSON válido, sem texto adicional, no formato: {"precoCusto": number|null, "fornecedor": string|null}. Para buscar o fornecedor: use listProductSuppliers com o ID do produto encontrado, depois getContact com o ID do fornecedor retornado para obter o nome.',
-        messages: [{role: 'user', content: prompt}]
-      })
-    });
-    const data = await res.json();
-    const text = data.content?.filter(b => b.type === 'text').map(b => b.text).join('') || '';
-    const clean = text.replace(/```json|```/g, '').trim();
-    return JSON.parse(clean);
-  } catch(e) {
-    return {precoCusto: null, fornecedor: null};
-  }
-}
-
-async function atualizarBling() {
-  if (!nomeObra || !obra.length) return;
-
-  const btn = document.getElementById('btnBling');
-  btn.disabled = true;
-
-  document.getElementById('overlayBling').classList.add('show');
-  document.getElementById('progFill').style.width = '0%';
-  document.getElementById('progResumo').textContent = 'Iniciando...';
-  document.getElementById('progLista').innerHTML = '';
-  document.getElementById('btnFecharBling').style.display = 'none';
-
-  // Filtrar itens com SKU ou nome
-  const itens = obra.filter(i => i.sku || i.prod);
-  const total = itens.length;
-  let ok = 0, erros = 0;
-
-  for (let i = 0; i < itens.length; i++) {
-    const item = itens[i];
-    const perc = Math.round(((i) / total) * 100);
-    document.getElementById('progFill').style.width = perc + '%';
-    document.getElementById('progResumo').textContent = `Processando ${i+1} de ${total}...`;
-
-    // Adicionar item na lista
-    const li = document.createElement('div');
-    li.className = 'prog-item';
-    li.id = 'prog-' + i;
-    li.innerHTML = `<span class="prog-icon">⏳</span><span class="prog-nome">${item.prod}</span><span class="prog-status proc">buscando...</span>`;
-    document.getElementById('progLista').appendChild(li);
-    li.scrollIntoView({block:'nearest'});
-
-    try {
-      const resultado = await buscarNoBling(item.sku, item.prod);
-
-      if (resultado.precoCusto !== null || resultado.fornecedor !== null) {
-        // Salvar custo real (col P = 16)
-        if (resultado.precoCusto !== null) {
-          await salvarCelula(item.ri, COL_CUSTO_REAL, resultado.precoCusto);
-          item.custoReal = resultado.precoCusto;
-        }
-        // Salvar fornecedor (col AC = 29)
-        if (resultado.fornecedor) {
-          await salvarCelula(item.ri, COL_FORNECEDOR, resultado.fornecedor);
-          item.forn = resultado.fornecedor;
-        }
-
-        const custo = resultado.precoCusto !== null ? `R$ ${resultado.precoCusto.toFixed(2).replace('.',',')}` : '';
-        const forn = resultado.fornecedor || '';
-        li.innerHTML = `<span class="prog-icon">✅</span><span class="prog-nome">${item.prod}</span><span class="prog-status ok">${custo}${custo&&forn?' · ':''}${forn}</span>`;
-        ok++;
-      } else {
-        li.innerHTML = `<span class="prog-icon">⚠️</span><span class="prog-nome">${item.prod}</span><span class="prog-status err">não encontrado</span>`;
-        erros++;
-      }
-    } catch(e) {
-      li.innerHTML = `<span class="prog-icon">❌</span><span class="prog-nome">${item.prod}</span><span class="prog-status err">erro</span>`;
-      erros++;
-    }
-  }
-
-  document.getElementById('progFill').style.width = '100%';
-  document.getElementById('progResumo').textContent = `Concluído: ${ok} atualizados · ${erros} não encontrados`;
-  document.getElementById('btnFecharBling').style.display = 'block';
-  btn.disabled = false;
-
-  // Atualizar fornecedores no filtro
-  atualizarForn();
-  renderTabela();
-}
-
-function fecharBling() {
-  document.getElementById('overlayBling').classList.remove('show');
-}
+let obra=[], nomeObra='', filtro='TODOS', cEst, cSit, cMeta;
 
 async function carregarPlanilha(){
   try{
@@ -405,8 +256,7 @@ async function carregarPlanilha(){
     cSit=ix('situa')>=0?ix('situa'):22;
     cEst=ix('estoque')>=0?ix('estoque'):23;
     const cForn=ix('fornec')>=0?ix('fornec'):-1;
-    cSku=hdr.findIndex(h=>h&&h.toString().toLowerCase()==='sku');
-    if(cSku<0) cSku=3; // coluna D fallback
+    cMeta=ix('meta')>=0?ix('meta'):14; // Custo Unit. META
 
     const obras={};
     for(let i=1;i<rows.length;i++){
@@ -427,8 +277,9 @@ async function carregarPlanilha(){
         else if(qtdeEst>0)   sit='PARCIAL';
         else                  sit='PEDIR';
       }
-      const sku = cSku >= 0 ? (r[cSku]||'').toString().trim() : '';
-      obras[cli].push({ri:i+1,prod,sku,qtdeTot,qtdeEst,qtdePed,sit,forn});
+      const metaRaw=cMeta>=0?(r[cMeta]||''):'';
+      const meta=metaRaw!==''?parseFloat(metaRaw):null;
+      obras[cli].push({ri:i+1,prod,qtdeTot,qtdeEst,qtdePed,sit,forn,meta:isNaN(meta)?null:meta});
     }
     const lista=Object.keys(obras).filter(k=>obras[k].length>0);
     if(!lista.length){document.getElementById('loading').innerHTML='<div style="color:#c62828">❌ Nenhuma obra encontrada.</div>';return;}
@@ -504,7 +355,7 @@ function renderTabela(){
       const sc='s-'+item.sit.replace(/ /g,'-');
       const selOpts=SITS.map(s=>`<option value="${s}"${s===item.sit?' selected':''}>${s}</option>`).join('');
       return `<tr>
-        <td class="col-prod" colspan="6">
+        <td class="col-prod" colspan="7">
           <div style="font-weight:600;font-size:.9rem;margin-bottom:6px">${item.prod}</div>
           <div style="display:flex;gap:12px;align-items:center;margin-bottom:8px;flex-wrap:wrap">
             <div>
@@ -523,6 +374,7 @@ function renderTabela(){
           <div style="display:flex;align-items:center;gap:8px;flex-wrap:wrap">
             <select class="sel-sit ${sc}" onchange="salvarSit(this,${item.ri})">${selOpts}</select>
             ${item.forn?`<span style="font-size:.75rem;color:var(--cinza)">${item.forn}</span>`:''}
+            ${item.meta!==null?`<span style="font-size:.75rem;color:var(--cinza);font-weight:600">R$ ${item.meta.toFixed(2).replace('.',',')}</span>`:''}
           </div>
         </td>
       </tr>`;
@@ -541,6 +393,7 @@ function renderTabela(){
         <td class="col-num col-ped">${pedVal}</td>
         <td><select class="sel-sit ${sc}" onchange="salvarSit(this,${item.ri})">${selOpts}</select></td>
         <td class="col-forn">${item.forn||'—'}</td>
+        <td style="text-align:right;font-size:.8rem;color:var(--cinza);padding-right:14px">${item.meta!==null?'R$ '+item.meta.toFixed(2).replace('.',','):'—'}</td>
       </tr>`;
     }).join('');
   }
@@ -612,7 +465,8 @@ function abrirEmail(){
     corpo+=`FORNECEDOR: ${f.toUpperCase()}\n`;
     itens.forEach(i=>{
       const q=i.sit==='PARCIAL'?`${i.qtdePed} un (${i.qtdeEst} em estoque)`:`${i.qtdePed} un`;
-      corpo+=`  • ${i.prod} — ${q}\n`;
+      const preco=i.meta!==null?` | R$ ${i.meta.toFixed(2).replace('.',',')} un`:'';
+      corpo+=`  • ${i.prod} — ${q}${preco}\n`;
     });
     corpo+='\n';
   });
@@ -639,7 +493,6 @@ function showToast(msg,tipo=''){
 }
 
 document.getElementById('overlay').addEventListener('click',e=>{if(e.target===e.currentTarget)fecharModal();});
-document.getElementById('overlayBling').addEventListener('click',e=>{if(e.target===e.currentTarget)fecharBling();});
 carregarPlanilha();
 </script>
 </body>
