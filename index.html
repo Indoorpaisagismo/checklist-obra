@@ -271,7 +271,7 @@ async function carregarPlanilha(){
       const sitRaw=(r[cSit]||'').toString().trim();
       const estRaw=r[cEst];
       const qtdeEst=(estRaw!==undefined&&estRaw!=='')?parseFloat(estRaw):null;
-      const qtdePed=qtdeEst!==null?Math.max(0,qtdeTot-qtdeEst):qtdeTot;
+      const qtdePed=qtdeEst!==null?(qtdeTot-qtdeEst):qtdeTot;
       const forn=cForn>=0?(r[cForn]||'').toString().replace('.','').trim():'';
       let sit=sitRaw;
       if(qtdeEst!==null&&sitRaw!=='IMPLANTADO'&&sitRaw!=='CANCELADO'){
@@ -353,7 +353,7 @@ function renderTabela(){
     // Layout mobile: cards por item
     tb.innerHTML=items.map(item=>{
       const estVal=item.qtdeEst!==null?item.qtdeEst:'';
-      const pedVal=item.qtdePed>0?item.qtdePed:(item.qtdeEst===null?item.qtdeTot:'—');
+      const pedVal=item.qtdeEst===null?item.qtdeTot:item.qtdePed;
       const sc='s-'+item.sit.replace(/ /g,'-');
       const selOpts=SITS.map(s=>`<option value="${s}"${s===item.sit?' selected':''}>${s}</option>`).join('');
       return `<tr>
@@ -370,7 +370,7 @@ function renderTabela(){
             </div>
             <div>
               <span style="font-size:.6rem;color:var(--cinza);text-transform:uppercase;display:block;margin-bottom:1px">A Pedir</span>
-              <span style="font-weight:700;color:var(--verm)">${pedVal}</span>
+              <span style="font-weight:700;color:${pedVal<0?'#1565C0':'var(--verm)'}">${pedVal}</span>
             </div>
           </div>
           <div style="display:flex;align-items:center;gap:8px;flex-wrap:wrap">
@@ -385,14 +385,14 @@ function renderTabela(){
     // Layout desktop: tabela normal
     tb.innerHTML=items.map(item=>{
       const estVal=item.qtdeEst!==null?item.qtdeEst:'';
-      const pedVal=item.qtdePed>0?item.qtdePed:(item.qtdeEst===null?item.qtdeTot:'—');
+      const pedVal=item.qtdeEst===null?item.qtdeTot:item.qtdePed;
       const sc='s-'+item.sit.replace(/ /g,'-');
       const selOpts=SITS.map(s=>`<option value="${s}"${s===item.sit?' selected':''}>${s}</option>`).join('');
       return `<tr>
         <td class="col-prod">${item.prod}</td>
         <td class="col-num col-tot">${item.qtdeTot}</td>
         <td class="col-num"><input class="inp-est" type="number" min="0" value="${estVal}" placeholder="—" onchange="salvarEst(this,${item.ri})"></td>
-        <td class="col-num col-ped">${pedVal}</td>
+        <td class="col-num" style="color:${pedVal<0?'#1565C0':'var(--verm)'};font-weight:700">${pedVal}</td>
         <td><select class="sel-sit ${sc}" onchange="salvarSit(this,${item.ri})">${selOpts}</select></td>
         <td class="col-forn">${item.forn||'—'}</td>
         <td style="text-align:right;font-size:.8rem;color:var(--cinza);padding-right:14px">${item.meta!==null?'R$ '+item.meta.toFixed(2).replace('.',','):'—'}</td>
@@ -422,7 +422,7 @@ async function salvarEst(input,ri){
     const item=obra.find(i=>i.ri===ri);
     if(item){
       item.qtdeEst=val===''?null:Number(val);
-      item.qtdePed=item.qtdeEst!==null?Math.max(0,item.qtdeTot-item.qtdeEst):item.qtdeTot;
+      item.qtdePed=item.qtdeEst!==null?(item.qtdeTot-item.qtdeEst):item.qtdeTot;
       // Salvar Qtde Pedir na planilha (col AB)
       fetch(SCRIPT_URL,{method:'POST',mode:'no-cors',headers:{'Content-Type':'application/json'},body:JSON.stringify({row:ri,col:cPed+1,value:item.qtdePed})});
       if(item.sit!=='IMPLANTADO'&&item.sit!=='CANCELADO'){
