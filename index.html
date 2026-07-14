@@ -239,9 +239,10 @@ header p{font-size:.68rem;opacity:.65;margin-top:1px;}
 const SHEET_ID = '1iT5-PI4EH0noG4-wsrI8h63lZutskZWSRxty2rmmVGQ';
 const API_KEY  = 'AIzaSyCe5c7z-CBesIw3hR9TOBl8EYUdEtkl0XY';
 const TAB      = 'PEDIDOS';
+const SCRIPT_URL = 'https://script.google.com/macros/s/AKfycbxgDHT0dk2oEMUskbErw6Ijd_7H4gZQi_Sz9l840_bFfz3d8OI_MRULpojxgMnPNweN/exec';
 const SITS     = ['PEDIR','EM ESTOQUE','PARCIAL','IMPLANTADO','CANCELADO','AGUARDAR'];
 
-let obra=[], nomeObra='', filtro='TODOS', cEst, cSit, cMeta;
+let obra=[], nomeObra='', filtro='TODOS', cEst, cSit, cMeta, cPed;
 
 async function carregarPlanilha(){
   try{
@@ -257,6 +258,7 @@ async function carregarPlanilha(){
     cEst=ix('estoque')>=0?ix('estoque'):23;
     const cForn=ix('fornec')>=0?ix('fornec'):-1;
     cMeta=ix('meta')>=0?ix('meta'):14; // Custo Unit. META
+    cPed=ix('pedir')>=0?ix('pedir'):27; // Qtde Pedir (col AB)
 
     const obras={};
     for(let i=1;i<rows.length;i++){
@@ -421,6 +423,8 @@ async function salvarEst(input,ri){
     if(item){
       item.qtdeEst=val===''?null:Number(val);
       item.qtdePed=item.qtdeEst!==null?Math.max(0,item.qtdeTot-item.qtdeEst):item.qtdeTot;
+      // Salvar Qtde Pedir na planilha (col AB)
+      fetch(SCRIPT_URL,{method:'POST',mode:'no-cors',headers:{'Content-Type':'application/json'},body:JSON.stringify({row:ri,col:cPed+1,value:item.qtdePed})});
       if(item.sit!=='IMPLANTADO'&&item.sit!=='CANCELADO'){
         if(!item.qtdeEst||item.qtdeEst===0) item.sit='PEDIR';
         else if(item.qtdeEst>=item.qtdeTot)  item.sit='EM ESTOQUE';
