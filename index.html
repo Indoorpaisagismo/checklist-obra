@@ -149,6 +149,22 @@ header p{font-size:.68rem;opacity:.65;margin-top:1px;}
 .toast.show{transform:translateX(-50%) translateY(0);}
 .toast.verde{background:var(--verde);}
 
+/* Fornecedor dropdown */
+.forn-wrap{position:relative;display:inline-block;}
+.sel-forn-item{padding:4px 22px 4px 8px;border-radius:10px;border:1.5px solid var(--borda);
+  font-size:.76rem;color:#444;background:white;cursor:pointer;appearance:none;max-width:130px;
+  background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='8' height='5'%3E%3Cpath d='M1 1l3 3 3-3' stroke='%23888' stroke-width='1.2' fill='none' stroke-linecap='round'/%3E%3C/svg%3E");
+  background-repeat:no-repeat;background-position:right 5px center;}
+.sel-forn-item:focus{outline:none;border-color:var(--verde);}
+.sel-forn-item.saving{opacity:.5;}
+.novo-forn-wrap{display:none;margin-top:4px;display:flex;gap:4px;align-items:center;}
+.novo-forn-wrap.show{display:flex;}
+.inp-novo-forn{padding:4px 8px;border:1.5px solid var(--verde);border-radius:8px;
+  font-size:.76rem;width:110px;background:white;}
+.inp-novo-forn:focus{outline:none;}
+.btn-ok-forn{background:var(--verde);color:white;border:none;border-radius:8px;
+  padding:4px 8px;font-size:.72rem;font-weight:700;cursor:pointer;white-space:nowrap;}
+
 </style>
 </head>
 <body>
@@ -242,7 +258,73 @@ const TAB      = 'PEDIDOS';
 const SCRIPT_URL = 'https://script.google.com/macros/s/AKfycbxgDHT0dk2oEMUskbErw6Ijd_7H4gZQi_Sz9l840_bFfz3d8OI_MRULpojxgMnPNweN/exec';
 const SITS     = ['PEDIR','EM ESTOQUE','PARCIAL','IMPLANTADO','CANCELADO','AGUARDAR'];
 
-let obra=[], nomeObra='', filtro='TODOS', cEst, cSit, cMeta, cPed;
+let obra=[], nomeObra='', filtro='TODOS', cEst, cSit, cMeta, cPed, cForn;
+
+// Lista global de fornecedores da obra atual
+let _forns = [];
+
+function atualizarListaForns() {
+  _forns = [...new Set(obra.map(i => i.forn).filter(f => f && f !== '—'))].sort();
+}
+
+function fornOpts(atual) {
+  const opts = _forns.map(f =>
+    `<option value="${f}" ${f===atual?'selected':''}>${f}</option>`
+  ).join('');
+  return `<option value="">— fornecedor —</option>${opts}<option value="__novo__">+ Novo...</option>`;
+}
+
+async function salvarForn(sel, ri) {
+  const val = sel.value;
+  if (val === '__novo__') {
+    // Mostrar campo de novo fornecedor
+    const wrap = document.getElementById('nfw-' + ri);
+    if (wrap) { wrap.classList.add('show'); document.getElementById('nfi-' + ri).focus(); }
+    sel.value = sel.dataset.prev || '';
+    return;
+  }
+  sel.dataset.prev = val;
+  if (!val) return;
+  sel.classList.add('saving');
+  try {
+    await fetch('https://script.google.com/macros/s/AKfycbxgDHT0dk2oEMUskbErw6Ijd_7H4gZQi_Sz9l840_bFfz3d8OI_MRULpojxgMnPNweN/exec', {
+      method: 'POST', mode: 'no-cors',
+      headers: {'Content-Type': 'application/json'},
+      body: JSON.stringify({row: ri, col: cForn + 1, value: val})
+    });
+    sel.classList.remove('saving');
+    const item = obra.find(i => i.ri === ri);
+    if (item) { item.forn = val; atualizarListaForns(); atualizarForn(); }
+    showToast('✅ Fornecedor salvo', 'verde');
+  } catch(e) {
+    sel.classList.remove('saving');
+    showToast('❌ ' + e.message);
+  }
+}
+
+async function confirmarNovoForn(ri) {
+  const inp = document.getElementById('nfi-' + ri);
+  const val = inp ? inp.value.trim() : '';
+  if (!val) return;
+  // Adicionar à lista global
+  if (!_forns.includes(val)) _forns.push(val);
+  _forns.sort();
+  // Salvar na planilha
+  try {
+    await fetch('https://script.google.com/macros/s/AKfycbxgDHT0dk2oEMUskbErw6Ijd_7H4gZQi_Sz9l840_bFfz3d8OI_MRULpojxgMnPNweN/exec', {
+      method: 'POST', mode: 'no-cors',
+      headers: {'Content-Type': 'application/json'},
+      body: JSON.stringify({row: ri, col: cForn + 1, value: val})
+    });
+    const item = obra.find(i => i.ri === ri);
+    if (item) { item.forn = val; atualizarListaForns(); atualizarForn(); }
+    // Fechar campo novo e re-renderizar
+    renderTabela();
+    showToast('✅ Fornecedor salvo', 'verde');
+  } catch(e) {
+    showToast('❌ ' + e.message);
+  }
+}
 
 async function carregarPlanilha(){
   try{
@@ -256,7 +338,7 @@ async function carregarPlanilha(){
     const iQtde=cQtde>=0?cQtde:2;
     cSit=ix('situa')>=0?ix('situa'):22;
     cEst=ix('estoque')>=0?ix('estoque'):23;
-    const cForn=ix('fornec')>=0?ix('fornec'):-1;
+    cForn=ix('fornec')>=0?ix('fornec'):-1;
     cMeta=ix('meta')>=0?ix('meta'):14; // Custo Unit. META
     cPed=ix('pedir')>=0?ix('pedir'):27; // Qtde Pedir (col AB)
 
@@ -298,6 +380,7 @@ function selecionarObra(){
   obra=nomeObra?(window._obras[nomeObra]||[]):[];
   if(!nomeObra){['resumo','filtros','tblWrap'].forEach(id=>document.getElementById(id).style.display='none');return;}
   filtro='TODOS';
+  atualizarListaForns();
   atualizarForn();
   document.getElementById('busca').value='';
   document.getElementById('resumo').style.display='grid';
@@ -375,7 +458,15 @@ function renderTabela(){
           </div>
           <div style="display:flex;align-items:center;gap:8px;flex-wrap:wrap">
             <select class="sel-sit ${sc}" onchange="salvarSit(this,${item.ri})">${selOpts}</select>
-            ${item.forn?`<span style="font-size:.75rem;color:var(--cinza)">${item.forn}</span>`:''}
+            <div class="forn-wrap" style="margin-top:2px">
+              <select class="sel-forn-item" onchange="salvarForn(this,${item.ri})" data-ri="${item.ri}">
+                ${fornOpts(item.forn)}
+              </select>
+              <div class="novo-forn-wrap" id="nfw-${item.ri}">
+                <input class="inp-novo-forn" type="text" placeholder="Novo fornecedor..." id="nfi-${item.ri}">
+                <button class="btn-ok-forn" onclick="confirmarNovoForn(${item.ri})">OK</button>
+              </div>
+            </div>
             ${item.meta!==null?`<span style="font-size:.75rem;color:var(--cinza);font-weight:600">R$ ${item.meta.toFixed(2).replace('.',',')}</span>`:''}
           </div>
         </td>
@@ -394,7 +485,17 @@ function renderTabela(){
         <td class="col-num"><input class="inp-est" type="number" min="0" value="${estVal}" placeholder="—" onchange="salvarEst(this,${item.ri})"></td>
         <td class="col-num" style="color:${pedVal<0?'#1565C0':'var(--verm)'};font-weight:700">${pedVal}</td>
         <td><select class="sel-sit ${sc}" onchange="salvarSit(this,${item.ri})">${selOpts}</select></td>
-        <td class="col-forn">${item.forn||'—'}</td>
+        <td style="vertical-align:middle;padding:6px 10px">
+          <div class="forn-wrap">
+            <select class="sel-forn-item" onchange="salvarForn(this,${item.ri})" data-ri="${item.ri}">
+              ${fornOpts(item.forn)}
+            </select>
+            <div class="novo-forn-wrap" id="nfw-${item.ri}">
+              <input class="inp-novo-forn" type="text" placeholder="Novo fornecedor..." id="nfi-${item.ri}">
+              <button class="btn-ok-forn" onclick="confirmarNovoForn(${item.ri})">OK</button>
+            </div>
+          </div>
+        </td>
         <td style="text-align:right;font-size:.8rem;color:var(--cinza);padding-right:14px">${item.meta!==null?'R$ '+item.meta.toFixed(2).replace('.',','):'—'}</td>
       </tr>`;
     }).join('');
