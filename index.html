@@ -262,9 +262,12 @@ let obra=[], nomeObra='', filtro='TODOS', cEst, cSit, cMeta, cPed, cForn;
 
 // Lista global de fornecedores da obra atual
 let _forns = [];
+let _todosForns = []; // todos fornecedores da planilha inteira
 
 function atualizarListaForns() {
-  _forns = [...new Set(obra.map(i => i.forn).filter(f => f && f !== '—'))].sort();
+  // Mescla fornecedores da obra atual + todos os já cadastrados na planilha
+  const daObra = obra.map(i => i.forn).filter(f => f && f !== '—');
+  _forns = [...new Set([..._todosForns, ...daObra])].sort();
 }
 
 function fornOpts(atual) {
@@ -308,7 +311,9 @@ async function confirmarNovoForn(ri) {
   if (!val) return;
   // Adicionar à lista global
   if (!_forns.includes(val)) _forns.push(val);
+  if (!_todosForns.includes(val)) _todosForns.push(val);
   _forns.sort();
+  _todosForns.sort();
   // Salvar na planilha
   try {
     await fetch('https://script.google.com/macros/s/AKfycbxgDHT0dk2oEMUskbErw6Ijd_7H4gZQi_Sz9l840_bFfz3d8OI_MRULpojxgMnPNweN/exec', {
@@ -365,6 +370,11 @@ async function carregarPlanilha(){
       const meta=metaRaw!==''?parseFloat(metaRaw):null;
       obras[cli].push({ri:i+1,prod,qtdeTot,qtdeEst,qtdePed,sit,forn,meta:isNaN(meta)?null:meta});
     }
+    // Coletar todos os fornecedores da planilha inteira
+    _todosForns = [...new Set(
+      Object.values(obras).flat().map(i => i.forn).filter(f => f && f.trim() && f !== '—')
+    )].sort();
+
     const lista=Object.keys(obras).filter(k=>obras[k].length>0);
     if(!lista.length){document.getElementById('loading').innerHTML='<div style="color:#c62828">❌ Nenhuma obra encontrada.</div>';return;}
     const sel=document.getElementById('selObra');
